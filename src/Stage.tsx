@@ -87,7 +87,7 @@ export class Stage extends StageBase<InitStateType, ChatStateType, MessageStateT
             stageDirections: `[{{char}} and {{user}} are playing chess. {{char}} is black and its their turn. ]`,
             messageState: null,
             modifiedMessage: null,
-            systemMessage: `---\n${this.buildBoard()}`,
+            systemMessage: `---\nCurrent Board\n${this.buildBoard()}`,
             error: null,
             chatState: null,
         };
@@ -108,7 +108,7 @@ export class Stage extends StageBase<InitStateType, ChatStateType, MessageStateT
             messageState: null,
             modifiedMessage: null,
             error: null,
-            systemMessage: `---\n${this.buildBoard()}`,
+            systemMessage: `---\nCurrent Board\n${this.buildBoard()}`,
             chatState: null
         };
     }
