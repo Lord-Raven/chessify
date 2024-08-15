@@ -11,7 +11,7 @@ type InitStateType = any;
 
 type ChatStateType = any;
 
-const MOVE_REGEX = /([a-hA-H][1-8])/
+const MOVE_REGEX = /([a-hA-H][1-8])/gm
 
 const PIECE_MAPPING: {[key: string]: string} = {
     "K": '\u2654',
@@ -82,15 +82,16 @@ export class Stage extends StageBase<InitStateType, ChatStateType, MessageStateT
 
         if (matches) {
             let coordinates: {[key: string]: string} = {};
+            const possibleMoves = moves(this.gameState);
             if (matches["1"]) {
                 coordinates["start"] = matches["0"].toUpperCase();
                 coordinates["end"] = matches["1"].toUpperCase();
-                if (!moves(this.gameState)[coordinates["start"]].includes(coordinates["end"])) {
+                if (!possibleMoves[coordinates["start"]] || !possibleMoves[coordinates["start"]].includes(coordinates["end"])) {
                     aiNote = `{{user}} tried to specify an invalid move. {{char}} may choose to tease or taunt them, but it remains {{user}}'s turn.`;
                 }
             } else {
                 coordinates["end"] = matches["0"].toUpperCase();
-                let possibleStarts = Object.keys(moves(this.gameState)).filter(key => moves[key].includes(coordinates["end"]));
+                let possibleStarts = Object.keys(possibleMoves).filter(key => moves[key].includes(coordinates["end"]));
                 if (possibleStarts.length == 1) {
                     coordinates["start"] = possibleStarts[0];
                 } else if (possibleStarts.length > 1) {
@@ -150,7 +151,7 @@ export class Stage extends StageBase<InitStateType, ChatStateType, MessageStateT
     buildBoard(): string {
         let fen: string = getFen(this.gameState);
         fen = fen.substring(0, fen.indexOf(' '));
-        let result = `---\n<span style='font-family: monospace'>#Okay: `;
+        let result = `---\n<span style='font-family: monospace; color: darkseagreen;'>`;
         for(let index = 0; index < fen.length; index++) {
             const charAt = fen.charAt(index);
 
@@ -164,14 +165,14 @@ export class Stage extends StageBase<InitStateType, ChatStateType, MessageStateT
                     }
                     break;
                 case '/' == (charAt):
-                    result += `#</span>\n<span style='font-family: monospace'>#Okay: `;
+                    result += `</span>\n<span style='font-family: monospace; color: darkseagreen;'>`;
                     break;
                 default:
                     break;
             }
         }
 
-        return `${result}#</span>`;
+        return `${result}</span>`;
     }
 
 
