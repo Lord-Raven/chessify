@@ -5,7 +5,18 @@
 project_name: "Chessify"
 
 # A short tagline to show in search.
-tagline: "It's right outside your door, now...play some chess"
+tagline: "It's right outside your door, now...play some chess."
+
+creator_notes: "I don't even like chess. But for all you sickos out there who do, 
+know that I will always defend your right to play it.
+<br>
+<br>
+This stage will allow you to play chess with a bot. 
+Of course, you'll actually be playing against 
+[js-chess-engine](https://github.com/josefjadrny/js-chess-engine)'s bundled AI 
+and not against the LLM. The stage will manage the game state and make moves, 
+and the LLM will be informed what has happened so it can respond as though it made that move.
+"
 
 # 'PUBLIC', 'PRIVATE', or 'UNLISTED'.
 visibility: 'UNLISTED'
