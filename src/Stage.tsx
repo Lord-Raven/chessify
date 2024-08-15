@@ -96,7 +96,7 @@ export class Stage extends StageBase<InitStateType, ChatStateType, MessageStateT
             messageState: null,
             modifiedMessage: null,
             error: null,
-            systemMessage: `---\`${this.buildBoard()}\``,
+            systemMessage: `---\n#\`${this.buildBoard()}\`#`,
             chatState: null
         };
     }
@@ -106,10 +106,10 @@ export class Stage extends StageBase<InitStateType, ChatStateType, MessageStateT
         fen = fen.substring(0, fen.indexOf(' '));
         let result = '';
         for(let index = 0; index < fen.length; index++) {
-            const charAt = fen.toLowerCase().charAt(index);
+            const charAt = fen.charAt(index);
 
             switch (true) {
-                case /[bknpqr]/.test(charAt):
+                case /[bknpqrBKNPQR]/.test(charAt):
                     result += ` ${charAt}`
                     break;
                 case /\d/.test(charAt):
@@ -118,7 +118,7 @@ export class Stage extends StageBase<InitStateType, ChatStateType, MessageStateT
                     }
                     break;
                 case '/' == (charAt):
-                    result += `<br>`;
+                    result += `\n`;
                     break;
                 default:
                     break;
