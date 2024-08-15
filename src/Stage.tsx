@@ -1,7 +1,8 @@
 import {ReactElement} from "react";
 import {StageBase, StageResponse, InitialData, Message} from "@chub-ai/stages-ts";
 import {LoadResponse} from "@chub-ai/stages-ts/dist/types/load";
-//import jsChessEngine from "js-chess-engine";
+// @ts-ignore
+import {Game} from 'js-chess-engine';
 
 type MessageStateType = any;
 
@@ -27,7 +28,8 @@ export class Stage extends StageBase<InitStateType, ChatStateType, MessageStateT
             initState,                             // @type: null | InitStateType
             chatState                              // @type: null | ChatStateType
         } = data;
-        //let game = new jsChessEngine.Game();
+        let game = new Game();
+        game.
     }
 
     async load(): Promise<Partial<LoadResponse<InitStateType, ChatStateType, MessageStateType>>> {
