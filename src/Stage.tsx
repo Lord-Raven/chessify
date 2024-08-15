@@ -29,7 +29,6 @@ export class Stage extends StageBase<InitStateType, ChatStateType, MessageStateT
             chatState                              // @type: null | ChatStateType
         } = data;
         let game = new Game();
-        game.
     }
 
     async load(): Promise<Partial<LoadResponse<InitStateType, ChatStateType, MessageStateType>>> {
