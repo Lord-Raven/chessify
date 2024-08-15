@@ -12,7 +12,20 @@ type InitStateType = any;
 type ChatStateType = any;
 
 const MOVE_REGEX = /[BRQNK][a-h][1-8]|[BRQNK][a-h]x[a-h][1-8]|[BRQNK][a-h][1-8]x[a-h][1-8]|[BRQNK][a-h][1-8][a-h][1-8]|[BRQNK][a-h][a-h][1-8]|[BRQNK]x[a-h][1-8]|[a-h]x[a-h][1-8]=(B+R+Q+N)|[a-h]x[a-h][1-8]|[a-h][1-8]x[a-h][1-8]=(B+R+Q+N)|[a-h][1-8]x[a-h][1-8]|[a-h][1-8][a-h][1-8]=(B+R+Q+N)|[a-h][1-8][a-h][1-8]|[a-h][1-8]=(B+R+Q+N)|[a-h][1-8]|[BRQNK][1-8]x[a-h][1-8]|[BRQNK][1-8][a-h][1-8]/;
-
+const PIECE_MAPPING: {[key: string]: string} = {
+    "K": '\u2654',
+    "Q": '\u2655',
+    "R": '\u2656',
+    "B": '\u2657',
+    "N": '\u2658',
+    "P": '\u2659',
+    "k": '\u265A',
+    "q": '\u265B',
+    "r": '\u265C',
+    "b": '\u265D',
+    "n": '\u265E',
+    "p": '\u265F'
+}
 export class Stage extends StageBase<InitStateType, ChatStateType, MessageStateType, ConfigType> {
 
     game;
@@ -51,13 +64,9 @@ export class Stage extends StageBase<InitStateType, ChatStateType, MessageStateT
     async beforePrompt(userMessage: Message): Promise<Partial<StageResponse<ChatStateType, MessageStateType>>> {
 
         const {
-            content,            /*** @type: string
-             @description Just the last message about to be sent. ***/
-            anonymizedId,       /*** @type: string
-             @description An anonymized ID that is unique to this individual
-              in this chat, but NOT their Chub ID. ***/
-            isBot             /*** @type: boolean
-             @description Whether this is itself from another bot, ex. in a group chat. ***/
+            content,
+            anonymizedId,
+            isBot
         } = userMessage;
 
         // Check for player's move.
@@ -71,7 +80,7 @@ export class Stage extends StageBase<InitStateType, ChatStateType, MessageStateT
             stageDirections: `[{{char}} and {{user}} are playing chess. {{char}} is black and its their turn. ]`,
             messageState: null,
             modifiedMessage: null,
-            systemMessage: `---\`${this.buildBoard()}\``,
+            systemMessage: `---\n#\`${this.buildBoard()}\`#`,
             error: null,
             chatState: null,
         };
@@ -80,13 +89,9 @@ export class Stage extends StageBase<InitStateType, ChatStateType, MessageStateT
     async afterResponse(botMessage: Message): Promise<Partial<StageResponse<ChatStateType, MessageStateType>>> {
 
         const {
-            content,            /*** @type: string
-             @description The LLM's response. ***/
-            anonymizedId,       /*** @type: string
-             @description An anonymized ID that is unique to this individual
-              in this chat, but NOT their Chub ID. ***/
-            isBot             /*** @type: boolean
-             @description Whether this is from a bot, conceivably always true. ***/
+            content,
+            anonymizedId,
+            isBot
         } = botMessage;
 
         this.game.aiMove(1);
@@ -110,7 +115,7 @@ export class Stage extends StageBase<InitStateType, ChatStateType, MessageStateT
 
             switch (true) {
                 case /[bknpqrBKNPQR]/.test(charAt):
-                    result += ` ${charAt}`
+                    result += ` ${PIECE_MAPPING[charAt]}`
                     break;
                 case /\d/.test(charAt):
                     for (let i = 0; i < Number(charAt); i++) {
