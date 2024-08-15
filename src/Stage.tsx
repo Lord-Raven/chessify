@@ -108,7 +108,7 @@ export class Stage extends StageBase<InitStateType, ChatStateType, MessageStateT
             messageState: null,
             modifiedMessage: null,
             error: null,
-            systemMessage: `---\n#Current Board#\n\`Current Board\`\n\`#Current Board#\`\n${this.buildBoard()}`,
+            systemMessage: `---\n#Current Board#\n${this.buildBoard()}`,
             chatState: null
         };
     }
@@ -116,13 +116,13 @@ export class Stage extends StageBase<InitStateType, ChatStateType, MessageStateT
     buildBoard(): string {
         let fen: string = this.game.exportFEN();
         fen = fen.substring(0, fen.indexOf(' '));
-        let result = ' #';
+        let result = ' #|';
         for(let index = 0; index < fen.length; index++) {
             const charAt = fen.charAt(index);
 
             switch (true) {
                 case /[bknpqrBKNPQR]/.test(charAt):
-                    result += ` ${PIECE_MAPPING[charAt]}`
+                    result += ` ${PIECE_MAPPING[charAt]}`;
                     break;
                 case /\d/.test(charAt):
                     for (let i = 0; i < Number(charAt); i++) {
@@ -130,14 +130,14 @@ export class Stage extends StageBase<InitStateType, ChatStateType, MessageStateT
                     }
                     break;
                 case '/' == (charAt):
-                    result += `# \n #`;
+                    result += `|# \n #|`;
                     break;
                 default:
                     break;
             }
         }
 
-        return `${result}#`;
+        return `${result}|#`;
     }
 
 
