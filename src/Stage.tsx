@@ -108,7 +108,7 @@ export class Stage extends StageBase<InitStateType, ChatStateType, MessageStateT
             messageState: null,
             modifiedMessage: null,
             error: null,
-            systemMessage: `---\nCurrent Board\n${this.buildBoard()}`,
+            systemMessage: `---\n#Current Board#\n\`Current Board\`\n\`#Current Board#\`\n${this.buildBoard()}`,
             chatState: null
         };
     }
