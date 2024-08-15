@@ -1,7 +1,7 @@
 import {ReactElement} from "react";
 import {StageBase, StageResponse, InitialData, Message} from "@chub-ai/stages-ts";
 import {LoadResponse} from "@chub-ai/stages-ts/dist/types/load";
-import {Game, getFen} from 'js-chess-engine';
+import {Game, move, moves, aiMove, getFen} from 'js-chess-engine';
 
 type MessageStateType = any;
 
@@ -11,7 +11,8 @@ type InitStateType = any;
 
 type ChatStateType = any;
 
-const MOVE_REGEX = /[BRQNK][a-h][1-8]|[BRQNK][a-h]x[a-h][1-8]|[BRQNK][a-h][1-8]x[a-h][1-8]|[BRQNK][a-h][1-8][a-h][1-8]|[BRQNK][a-h][a-h][1-8]|[BRQNK]x[a-h][1-8]|[a-h]x[a-h][1-8]=(B+R+Q+N)|[a-h]x[a-h][1-8]|[a-h][1-8]x[a-h][1-8]=(B+R+Q+N)|[a-h][1-8]x[a-h][1-8]|[a-h][1-8][a-h][1-8]=(B+R+Q+N)|[a-h][1-8][a-h][1-8]|[a-h][1-8]=(B+R+Q+N)|[a-h][1-8]|[BRQNK][1-8]x[a-h][1-8]|[BRQNK][1-8][a-h][1-8]/;
+const MOVE_REGEX = /([a-hA-H][1-8])/
+
 const PIECE_MAPPING: {[key: string]: string} = {
     "K": '\u2654',
     "Q": '\u2655',
@@ -28,7 +29,7 @@ const PIECE_MAPPING: {[key: string]: string} = {
 }
 export class Stage extends StageBase<InitStateType, ChatStateType, MessageStateType, ConfigType> {
 
-    game;
+    gameState: any;
 
     constructor(data: InitialData<InitStateType, ChatStateType, MessageStateType, ConfigType>) {
 
@@ -42,11 +43,14 @@ export class Stage extends StageBase<InitStateType, ChatStateType, MessageStateT
             initState,                             // @type: null | InitStateType
             chatState                              // @type: null | ChatStateType
         } = data;
-        this.game = new Game();
     }
 
     async load(): Promise<Partial<LoadResponse<InitStateType, ChatStateType, MessageStateType>>> {
 
+        if (!this.gameState) {
+            this.gameState = new Game().exportJson();
+            console.log(this.gameState);
+        }
         return {
             success: true,
             error: null,
@@ -73,21 +77,53 @@ export class Stage extends StageBase<InitStateType, ChatStateType, MessageStateT
         let matches = MOVE_REGEX.exec(content);
         console.log(matches);
         console.log(matches ? matches["0"] : '');
+        let aiNote = '';
+        let visualState = this.buildBoard();
 
-        if (matches && matches["0"]) {
-            // Attempt to convert move string to valid move
-            const moveString = matches["0"];
+        if (matches) {
+            let coordinates: {[key: string]: string} = {};
+            if (matches["1"]) {
+                coordinates["start"] = matches["0"].toUpperCase();
+                coordinates["end"] = matches["1"].toUpperCase();
+                if (!moves(this.gameState)[coordinates["start"]].includes(coordinates["end"])) {
+                    aiNote = `{{user}} tried to specify an invalid move. {{char}} may choose to tease or taunt them, but it remains {{user}}'s turn.`;
+                }
+            } else {
+                coordinates["end"] = matches["0"].toUpperCase();
+                let possibleStarts = Object.keys(moves(this.gameState)).filter(key => moves[key].includes(coordinates["end"]));
+                if (possibleStarts.length == 1) {
+                    coordinates["start"] = possibleStarts[0];
+                } else if (possibleStarts.length > 1) {
+                    aiNote = `{{user}} tried to specify only an ending position, but multiple pieces could make that move. {{char}} may choose to tease or taunt them, but it remains {{user}}'s turn.`;
+                } else {
+                    aiNote = `{{user}} tried to specify an ending position that no piece can move to. {{char}} may choose to tease or taunt them, but it remains {{user}}'s turn.`;
+                }
+            }
 
+            if (aiNote == '') {
+                // Must be a valid move; make it so.
+                this.gameState = move(this.gameState, coordinates["start"], coordinates["end"]);
+                visualState = this.buildBoard();
+                // TODO: A big flaw of both turns occurring here is that the AI never sees the intermediate FEN and has limited insight into what the user's move accomplished; consider attempting to summarize for them.
+
+                // Then, make a move:
+                const charMove = aiMove(this.gameState, 2);
+                console.log(charMove);
+                console.log(Object.keys(charMove)[0]);
+                console.log(charMove[Object.keys(charMove)[0]]);
+                this.gameState = move(this.gameState, Object.keys(charMove)[0], charMove[Object.keys(charMove)[0]]);
+
+                aiNote = `{{user}} moved from ${coordinates["start"]} to ${coordinates["end"]}. {{char}} followed up by moving from ${Object.keys(charMove)[0]} to ${charMove[Object.keys(charMove)[0]]}.`
+            }
+        } else {
+            aiNote = `{{user}} didn't make a move this turn. {{char}} should spend some time chatting, bantering, or antagonizing them, but it will remain {{user}}'s turn.`;
         }
 
-
-        this.game.aiMove(1);
-
         return {
-            stageDirections: `[{{char}} and {{user}} are playing chess. {{char}} is black and its their turn. ]`,
+            stageDirections: `[{{char}} and {{user}} are playing chess. ${aiNote}\nMake remarks based on the FEN of the current board:\n${getFen(this.gameState)}]`,
             messageState: null,
             modifiedMessage: null,
-            systemMessage: `---\nCurrent Board\n${this.buildBoard()}`,
+            systemMessage: visualState,
             error: null,
             chatState: null,
         };
@@ -101,22 +137,20 @@ export class Stage extends StageBase<InitStateType, ChatStateType, MessageStateT
             isBot
         } = botMessage;
 
-        this.game.aiMove(1);
-
         return {
             stageDirections: null,
             messageState: null,
             modifiedMessage: null,
             error: null,
-            systemMessage: `---\n#Current Board#\n${this.buildBoard()}`,
+            systemMessage: this.buildBoard(),
             chatState: null
         };
     }
 
     buildBoard(): string {
-        let fen: string = this.game.exportFEN();
+        let fen: string = getFen(this.gameState);
         fen = fen.substring(0, fen.indexOf(' '));
-        let result = '<span class="text-monospace>#Okay: ';
+        let result = '---\n<span style="font-family: monospace">#Okay: ';
         for(let index = 0; index < fen.length; index++) {
             const charAt = fen.charAt(index);
 
@@ -130,14 +164,14 @@ export class Stage extends StageBase<InitStateType, ChatStateType, MessageStateT
                     }
                     break;
                 case '/' == (charAt):
-                    result += `#\n#Okay: `;
+                    result += `#</span>\n<span style="font-family: monospace">#Okay: `;
                     break;
                 default:
                     break;
             }
         }
 
-        return `${result}</span>`;
+        return `${result}#</span>`;
     }
 
 
