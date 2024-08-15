@@ -108,7 +108,7 @@ export class Stage extends StageBase<InitStateType, ChatStateType, MessageStateT
             messageState: null,
             modifiedMessage: null,
             error: null,
-            systemMessage: `---\n#\`${this.buildBoard()}\`#`,
+            systemMessage: `---\n${this.buildBoard()}`,
             chatState: null
         };
     }
@@ -116,7 +116,7 @@ export class Stage extends StageBase<InitStateType, ChatStateType, MessageStateT
     buildBoard(): string {
         let fen: string = this.game.exportFEN();
         fen = fen.substring(0, fen.indexOf(' '));
-        let result = '`<h1>';
+        let result = '\`#';
         for(let index = 0; index < fen.length; index++) {
             const charAt = fen.charAt(index);
 
@@ -126,18 +126,18 @@ export class Stage extends StageBase<InitStateType, ChatStateType, MessageStateT
                     break;
                 case /\d/.test(charAt):
                     for (let i = 0; i < Number(charAt); i++) {
-                        result += `  `;
+                        result += ` .`;
                     }
                     break;
                 case '/' == (charAt):
-                    result += `<\h1>\`\n\`<h1>`;
+                    result += `#\`\n\`#`;
                     break;
                 default:
                     break;
             }
         }
 
-        return `${result}<\h1>\``;
+        return `${result}#\``;
     }
 
 
