@@ -116,7 +116,7 @@ export class Stage extends StageBase<InitStateType, ChatStateType, MessageStateT
     buildBoard(): string {
         let fen: string = this.game.exportFEN();
         fen = fen.substring(0, fen.indexOf(' '));
-        let result = '\`#';
+        let result = ' #\`';
         for(let index = 0; index < fen.length; index++) {
             const charAt = fen.charAt(index);
 
@@ -130,14 +130,14 @@ export class Stage extends StageBase<InitStateType, ChatStateType, MessageStateT
                     }
                     break;
                 case '/' == (charAt):
-                    result += `#\`\n\`#`;
+                    result += `\`# \n #\``;
                     break;
                 default:
                     break;
             }
         }
 
-        return `${result}#\``;
+        return `${result}\`#`;
     }
 
 
