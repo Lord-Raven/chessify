@@ -1,7 +1,6 @@
 import {ReactElement} from "react";
 import {StageBase, StageResponse, InitialData, Message} from "@chub-ai/stages-ts";
 import {LoadResponse} from "@chub-ai/stages-ts/dist/types/load";
-// @ts-ignore
 import {Game} from 'js-chess-engine';
 
 type MessageStateType = any;
@@ -12,9 +11,11 @@ type InitStateType = any;
 
 type ChatStateType = any;
 
+const MOVE_REGEX = /[BRQNK][a-h][1-8]|[BRQNK][a-h]x[a-h][1-8]|[BRQNK][a-h][1-8]x[a-h][1-8]|[BRQNK][a-h][1-8][a-h][1-8]|[BRQNK][a-h][a-h][1-8]|[BRQNK]x[a-h][1-8]|[a-h]x[a-h][1-8]=(B+R+Q+N)|[a-h]x[a-h][1-8]|[a-h][1-8]x[a-h][1-8]=(B+R+Q+N)|[a-h][1-8]x[a-h][1-8]|[a-h][1-8][a-h][1-8]=(B+R+Q+N)|[a-h][1-8][a-h][1-8]|[a-h][1-8]=(B+R+Q+N)|[a-h][1-8]|[BRQNK][1-8]x[a-h][1-8]|[BRQNK][1-8][a-h][1-8]/;
+
 export class Stage extends StageBase<InitStateType, ChatStateType, MessageStateType, ConfigType> {
 
-
+    game;
 
     constructor(data: InitialData<InitStateType, ChatStateType, MessageStateType, ConfigType>) {
 
@@ -28,7 +29,7 @@ export class Stage extends StageBase<InitStateType, ChatStateType, MessageStateT
             initState,                             // @type: null | InitStateType
             chatState                              // @type: null | ChatStateType
         } = data;
-        let game = new Game();
+        this.game = new Game();
     }
 
     async load(): Promise<Partial<LoadResponse<InitStateType, ChatStateType, MessageStateType>>> {
@@ -58,11 +59,18 @@ export class Stage extends StageBase<InitStateType, ChatStateType, MessageStateT
             isBot             /*** @type: boolean
              @description Whether this is itself from another bot, ex. in a group chat. ***/
         } = userMessage;
+
+        // Check for player's move.
+        let matches = MOVE_REGEX.exec(content);
+        console.log(matches);
+
+        this.game.aiMove(1);
+
         return {
-            stageDirections: null,
+            stageDirections: `[{{char}} and {{user}} are playing chess. {{char}} is black and its their turn. ]`,
             messageState: null,
             modifiedMessage: null,
-            systemMessage: null,
+            systemMessage: `---\`${this.buildBoard()}\``,
             error: null,
             chatState: null,
         };
@@ -79,14 +87,44 @@ export class Stage extends StageBase<InitStateType, ChatStateType, MessageStateT
             isBot             /*** @type: boolean
              @description Whether this is from a bot, conceivably always true. ***/
         } = botMessage;
+
+        this.game.aiMove(1);
+
         return {
             stageDirections: null,
             messageState: null,
             modifiedMessage: null,
             error: null,
-            systemMessage: null,
+            systemMessage: `---\`${this.buildBoard()}\``,
             chatState: null
         };
+    }
+
+    buildBoard(): string {
+        let fen: string = this.game.getFen();
+        fen = fen.substring(0, fen.indexOf(' '));
+        let result = '';
+        for(let index = 0; index < fen.length; index++) {
+            const charAt = fen.toLowerCase().charAt(index);
+
+            switch (true) {
+                case /[bknpqr]/.test(charAt):
+                    result += ` ${charAt}`
+                    break;
+                case /\d/.test(charAt):
+                    for (let i = 0; i < Number(charAt); i++) {
+                        result += `  `;
+                    }
+                    break;
+                case '/' == (charAt):
+                    result += `<br>`;
+                    break;
+                default:
+                    break;
+            }
+        }
+
+        return result;
     }
 
 
