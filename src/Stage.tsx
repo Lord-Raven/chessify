@@ -80,7 +80,7 @@ export class Stage extends StageBase<InitStateType, ChatStateType, MessageStateT
             stageDirections: `[{{char}} and {{user}} are playing chess. {{char}} is black and its their turn. ]`,
             messageState: null,
             modifiedMessage: null,
-            systemMessage: `---\n#\`${this.buildBoard()}\`#`,
+            systemMessage: `---\n${this.buildBoard()}`,
             error: null,
             chatState: null,
         };
@@ -109,7 +109,7 @@ export class Stage extends StageBase<InitStateType, ChatStateType, MessageStateT
     buildBoard(): string {
         let fen: string = this.game.exportFEN();
         fen = fen.substring(0, fen.indexOf(' '));
-        let result = '';
+        let result = '`#';
         for(let index = 0; index < fen.length; index++) {
             const charAt = fen.charAt(index);
 
@@ -123,14 +123,14 @@ export class Stage extends StageBase<InitStateType, ChatStateType, MessageStateT
                     }
                     break;
                 case '/' == (charAt):
-                    result += `\n`;
+                    result += `#\`\n\`#`;
                     break;
                 default:
                     break;
             }
         }
 
-        return result;
+        return `${result}#\``;
     }
 
 
