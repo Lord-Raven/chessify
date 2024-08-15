@@ -1,7 +1,7 @@
 import {ReactElement} from "react";
 import {StageBase, StageResponse, InitialData, Message} from "@chub-ai/stages-ts";
 import {LoadResponse} from "@chub-ai/stages-ts/dist/types/load";
-import {Game} from 'js-chess-engine';
+import {Game, getFen} from 'js-chess-engine';
 
 type MessageStateType = any;
 
@@ -63,6 +63,7 @@ export class Stage extends StageBase<InitStateType, ChatStateType, MessageStateT
         // Check for player's move.
         let matches = MOVE_REGEX.exec(content);
         console.log(matches);
+        console.log(matches ? matches["0"] : '');
 
         this.game.aiMove(1);
 
@@ -101,7 +102,7 @@ export class Stage extends StageBase<InitStateType, ChatStateType, MessageStateT
     }
 
     buildBoard(): string {
-        let fen: string = this.game.getFen();
+        let fen: string = this.game.exportFEN();
         fen = fen.substring(0, fen.indexOf(' '));
         let result = '';
         for(let index = 0; index < fen.length; index++) {
