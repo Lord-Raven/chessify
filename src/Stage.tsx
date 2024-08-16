@@ -47,6 +47,7 @@ export class Stage extends StageBase<InitStateType, ChatStateType, MessageStateT
         this.user = users[Object.keys(users)[0]];
         if (messageState != null) {
             this.gameState = JSON.parse(messageState.gameState);
+            console.log(this.gameState);
         }
     }
 
@@ -68,6 +69,7 @@ export class Stage extends StageBase<InitStateType, ChatStateType, MessageStateT
 
         if (state != null) {
             this.gameState = JSON.parse(state.gameState);
+            console.log(this.gameState);
         }
     }
 
@@ -107,6 +109,7 @@ export class Stage extends StageBase<InitStateType, ChatStateType, MessageStateT
             }
 
             if (aiNote == '') {
+                console.log('Making a move');
                 // Must be a valid move; make it so.
                 this.gameState = move(this.gameState, coordinates["start"], coordinates["end"]);
                 visualState = this.buildBoard();
@@ -122,6 +125,8 @@ export class Stage extends StageBase<InitStateType, ChatStateType, MessageStateT
                 this.gameState = move(this.gameState, Object.keys(charMove)[0], charMove[Object.keys(charMove)[0]]);
 
                 aiNote = `{{user}} moved from ${coordinates["start"]} to ${coordinates["end"]}. {{char}} followed up by moving from ${Object.keys(charMove)[0]} to ${charMove[Object.keys(charMove)[0]]}.`
+            } else {
+                console.log('Did not make a move (nothing legal');
             }
         } else {
             aiNote = `{{user}} didn't make a move this turn. {{char}} should spend some time chatting, bantering, or antagonizing them, but it will remain {{user}}'s turn.`;
@@ -181,7 +186,7 @@ export class Stage extends StageBase<InitStateType, ChatStateType, MessageStateT
         fen = fen.substring(0, fen.indexOf(' '));
         let result = `---\n`;
         let lines = fen.split('/');
-        result += `<style>.chessboard {padding: 6px; border: 1px solid #333; border-radius: 5px; display: inline-block; margin: auto; background: darkslategray} div.box {width: 50px; height: 50px; display: flex; align-items: center; justify-content: center; font-size: 32px; font-family: monospace; color: darkseagreen;}.row{display: flex;} div.row:nth-child(odd) div.box:nth-child(odd){background: #CCC;} div.row:nth-child(even) div.box:nth-child(even){background: #CCC;} div.row:nth-child(even) div.box:nth-child(odd) {background: #333;} div.row:nth-child(odd) div.box:nth-child(even){background: #333;}</style>`;
+        result += `<style>.chessboard {padding: 6px; border: 1px solid #333; border-radius: 5px; display: inline-block; margin: auto; background: darkslategray} div.box {width: 50px; height: 50px; display: flex; align-items: center; justify-content: center; font-size: 32px; font-family: monospace; color: darkseagreen;}.row{display: flex;} div.row:nth-child(odd) div.box:nth-child(odd){background: slategray;} div.row:nth-child(even) div.box:nth-child(even){background: slategray;} div.row:nth-child(even) div.box:nth-child(odd) {background: #333;} div.row:nth-child(odd) div.box:nth-child(even){background: #333;}</style>`;
         result += `<div class='chessboard'>`;
         lines.forEach(line => result += this.buildRow(line));
         result += `</div>`;
