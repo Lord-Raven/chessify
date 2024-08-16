@@ -128,7 +128,7 @@ export class Stage extends StageBase<InitStateType, ChatStateType, MessageStateT
 
         return {
             stageDirections: this.replaceTags(
-                `[{{char}} and {{user}} are playing chess. Write a response illustrating the most recent events, including {{char}}'s reactions. ${aiNote}\nThis is the only event that has occurred, so make remarks about this move or the current state of the board. Additional moves will occur in future responses. Here is the board's FEN:\n${getFen(this.gameState)}]`,
+                `[{{char}} and {{user}} are playing chess. Write a response describing the most recent move, including {{char}}'s reactions. ${aiNote}\nThis is the only event that has occurred, so make remarks about this move or the current state of the board. Additional moves will occur in future responses. Here is the board's FEN:\n${getFen(this.gameState)}]`,
                 {"user": this.user.name, "char": promptForId ? this.characters[promptForId].name : ''}),
             messageState: {gameState: JSON.stringify(this.gameState)},
             modifiedMessage: null,
@@ -180,7 +180,7 @@ export class Stage extends StageBase<InitStateType, ChatStateType, MessageStateT
         fen = fen.substring(0, fen.indexOf(' '));
         let result = `---\n`;
         let lines = fen.split('/');
-        result += `<style>.chessboard {padding: 10px; border: 1px solid #ccc; border-radius: 5px; display: inline-block; margin: auto; background: lightcoral} div.box {width: 50px; height: 50px; display: flex; align-items: center; justify-content: center; font-size: 32px; font-family: monospace; color: darkseagreen;}.row{display: flex;} div.row:nth-child(odd).box:nth-child(odd),div.row:nth-child(even).box:nth-child(even){background: #666666;} div.row:nth-child(even).box:nth-child(odd),div.row:nth-child(odd).box:nth-child(even){background: #000000;}</style>`;
+        result += `<style>.chessboard {padding: 10px; border: 1px solid #ccc; border-radius: 5px; display: inline-block; margin: auto; background: lightcoral} div.box {width: 50px; height: 50px; display: flex; align-items: center; justify-content: center; font-size: 32px; font-family: monospace; color: darkseagreen;}.row{display: flex;} div.row:nth-child(odd) div.box:nth-child(odd){background: #666666;} div.row:nth-child(even) div.box:nth-child(even){background: #666666;} div.row:nth-child(even) div.box:nth-child(odd) {background: #000000;} div.row:nth-child(odd) div.box:nth-child(even){background: #000000;}</style>`;
         result += `<div class='chessboard'>`;
         lines.forEach(line => result += this.buildRow(line));
         result += `</div>`;
