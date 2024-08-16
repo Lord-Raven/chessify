@@ -110,6 +110,7 @@ export class Stage extends StageBase<InitStateType, ChatStateType, MessageStateT
                 // Must be a valid move; make it so.
                 this.gameState = move(this.gameState, coordinates["start"], coordinates["end"]);
                 visualState = this.buildBoard();
+                console.log(visualState);
 
                 // TODO: A big flaw of both turns occurring here is that the AI never sees the intermediate FEN and has limited insight into what the user's move accomplished; consider attempting to summarize for them.
 
@@ -180,7 +181,7 @@ export class Stage extends StageBase<InitStateType, ChatStateType, MessageStateT
         fen = fen.substring(0, fen.indexOf(' '));
         let result = `---\n`;
         let lines = fen.split('/');
-        result += `<style>.chessboard {padding: 10px; border: 1px solid #ccc; border-radius: 5px; display: inline-block; margin: auto; background: lightcoral} div.box {width: 50px; height: 50px; display: flex; align-items: center; justify-content: center; font-size: 32px; font-family: monospace; color: darkseagreen;}.row{display: flex;} div.row:nth-child(odd) div.box:nth-child(odd){background: #666666;} div.row:nth-child(even) div.box:nth-child(even){background: #666666;} div.row:nth-child(even) div.box:nth-child(odd) {background: #000000;} div.row:nth-child(odd) div.box:nth-child(even){background: #000000;}</style>`;
+        result += `<style>.chessboard {padding: 6px; border: 1px solid #333; border-radius: 5px; display: inline-block; margin: auto; background: darkslategray} div.box {width: 50px; height: 50px; display: flex; align-items: center; justify-content: center; font-size: 32px; font-family: monospace; color: darkseagreen;}.row{display: flex;} div.row:nth-child(odd) div.box:nth-child(odd){background: #CCC;} div.row:nth-child(even) div.box:nth-child(even){background: #CCC;} div.row:nth-child(even) div.box:nth-child(odd) {background: #333;} div.row:nth-child(odd) div.box:nth-child(even){background: #333;}</style>`;
         result += `<div class='chessboard'>`;
         lines.forEach(line => result += this.buildRow(line));
         result += `</div>`;
