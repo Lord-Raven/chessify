@@ -165,7 +165,7 @@ export class Stage extends StageBase<InitStateType, ChatStateType, MessageStateT
     buildBoard(): string {
         let fen: string = getFen(this.gameState);
         fen = fen.substring(0, fen.indexOf(' '));
-        let result = `---\n<span style='font-family: SFMono-Regular,Consolas,monospace; color: darkseagreen;'>`;
+        let result = `---\n<span style='font-size: 4rem; font-family: SFMono-Regular, Consolas, Liberation Mono, Menlo, Courier, monospace; color: darkseagreen;'>`;
         for(let index = 0; index < fen.length; index++) {
             const charAt = fen.charAt(index);
 
@@ -179,7 +179,7 @@ export class Stage extends StageBase<InitStateType, ChatStateType, MessageStateT
                     }
                     break;
                 case '/' == (charAt):
-                    result += `</span>\n<span style='font-family: SFMono-Regular,Consolas,monospace; color: darkseagreen;'>`;
+                    result += `</span>\n<span style='font-size: 4rem; font-family: SFMono-Regular, Consolas, Liberation Mono, Menlo, Courier, monospace; color: darkseagreen;'>`;
                     break;
                 default:
                     break;
