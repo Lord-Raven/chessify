@@ -38,13 +38,9 @@ export class Stage extends StageBase<InitStateType, ChatStateType, MessageStateT
 
         super(data);
         const {
-            characters,         // @type:  { [key: string]: Character }
-            users,                  // @type:  { [key: string]: User}
-            config,                                 //  @type:  ConfigType
-            messageState,                           //  @type:  MessageStateType
-            environment,                     // @type: Environment (which is a string)
-            initState,                             // @type: null | InitStateType
-            chatState                              // @type: null | ChatStateType
+            characters,
+            users,
+            messageState
         } = data;
 
         this.characters = characters;
@@ -79,9 +75,7 @@ export class Stage extends StageBase<InitStateType, ChatStateType, MessageStateT
 
         const {
             content,
-            anonymizedId,
-            promptForId,
-            isBot
+            promptForId
         } = userMessage;
 
         // Check for player's move.
@@ -146,12 +140,6 @@ export class Stage extends StageBase<InitStateType, ChatStateType, MessageStateT
 
     async afterResponse(botMessage: Message): Promise<Partial<StageResponse<ChatStateType, MessageStateType>>> {
 
-        const {
-            content,
-            anonymizedId,
-            isBot
-        } = botMessage;
-
         return {
             stageDirections: null,
             messageState: {gameState: JSON.stringify(this.gameState)},
@@ -165,7 +153,7 @@ export class Stage extends StageBase<InitStateType, ChatStateType, MessageStateT
     buildBoard(): string {
         let fen: string = getFen(this.gameState);
         fen = fen.substring(0, fen.indexOf(' '));
-        let result = `---\n<span style='font-size: 4rem; font-family: SFMono-Regular, Consolas, Liberation Mono, Menlo, Courier, monospace; color: darkseagreen;'>`;
+        let result = `---\n<span style='font-size: 4rem; font-family: GNU Unifont, monospace; color: darkseagreen;'>`;
         for(let index = 0; index < fen.length; index++) {
             const charAt = fen.charAt(index);
 
