@@ -180,7 +180,7 @@ export class Stage extends StageBase<InitStateType, ChatStateType, MessageStateT
         fen = fen.substring(0, fen.indexOf(' '));
         let result = `---\n`;
         let lines = fen.split('/');
-        result += `<style>.row{display: flex; width: 100%;}.box {width: 50px;height: 50px; display: flex; align-items: center; justify-content: center; font-size: 24px; color: darkseagreen;}.row:nth-child(even).box:nth-child(odd) {background-color: transparent;},.row:nth-child(odd).box:nth-child(even) {background-color: #666666;}</style>`;
+        result += `<style>.row{display: flex; width: 100%;}.box {width: 50px;height: 50px; display: flex; align-items: center; justify-content: center; font-size: 24px; font-family: monospace; color: darkseagreen;}.row:nth-child(even).box:nth-child(odd) {background-color: transparent;},.row:nth-child(odd).box:nth-child(even) {background-color: #666666;}</style>`;
         lines.forEach(line => result += this.buildRow(line));
 
         return `${result}`;
