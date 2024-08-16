@@ -206,10 +206,10 @@ export class Stage extends StageBase<InitStateType, ChatStateType, MessageStateT
         fen = fen.substring(0, fen.indexOf(' '));
         let result = `---\n`;
         let lines = fen.split('/');
-        result += `<style>.play-area {width: 50%; padding-bottom: 50%; position: relative;}.chessboard {width: 100%; height: 100%; position: absolute; top: 0; left: 0; background: darkslategray} .row{width: 100%; height: 12.5%; display: flex;} div.box {width: 12.5%; height: 100%; display: flex; align-items: center; justify-content: center; font-size: 100%; font-family: monospace;} div.row:nth-child(odd) div.box:nth-child(odd){background: slategray;} div.row:nth-child(even) div.box:nth-child(even){background: slategray;} div.row:nth-child(even) div.box:nth-child(odd) {background: #333;} div.row:nth-child(odd) div.box:nth-child(even){background: #333;} .white-piece{ fill: #fff;} .black-piece{ fill: #000;}</style>`;
+        result += `<style>.play-area {width: 80%; padding-bottom: 60%; position: relative;} .chessboard {width: 75%; height: 100%; position: absolute; top: 0; left: 0; background: darkslategray} .discard {width: 25%; height: 100%; position: absolute; float: right; top: 0; right: 0;  background: red} .row{width: 100%; height: 12.5%; display: flex;} div.box {width: 12.5%; height: 100%; display: flex; align-items: center; justify-content: center; font-size: 100%; font-family: monospace;} div.row:nth-child(odd) div.box:nth-child(odd){background: slategray;} div.row:nth-child(even) div.box:nth-child(even){background: slategray;} div.row:nth-child(even) div.box:nth-child(odd) {background: #333;} div.row:nth-child(odd) div.box:nth-child(even){background: #333;} .white-piece{ fill: #fff;} .black-piece{ fill: #000;}</style>`;
         result += `<div class='play-area'><div class='chessboard'>`;
         lines.forEach(line => result += this.buildRow(line));
-        result += `</div></div>`;
+        result += `</div><div class='discard'>Discard here.</div></div>`;
         return `${result}`;
     }
 
