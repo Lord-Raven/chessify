@@ -1,5 +1,5 @@
 import {ReactElement} from "react";
-import {StageBase, StageResponse, InitialData, Message} from "@chub-ai/stages-ts";
+import {StageBase, StageResponse, InitialData, Message, Character, User} from "@chub-ai/stages-ts";
 import {LoadResponse} from "@chub-ai/stages-ts/dist/types/load";
 import {Game, move, moves, aiMove, getFen} from 'js-chess-engine';
 
@@ -31,6 +31,9 @@ export class Stage extends StageBase<InitStateType, ChatStateType, MessageStateT
 
     gameState: any;
 
+    characters: {[key: string]: Character};
+    user: User;
+
     constructor(data: InitialData<InitStateType, ChatStateType, MessageStateType, ConfigType>) {
 
         super(data);
@@ -43,6 +46,9 @@ export class Stage extends StageBase<InitStateType, ChatStateType, MessageStateT
             initState,                             // @type: null | InitStateType
             chatState                              // @type: null | ChatStateType
         } = data;
+
+        this.characters = characters;
+        this.user = users[Object.keys(users)[0]];
     }
 
     async load(): Promise<Partial<LoadResponse<InitStateType, ChatStateType, MessageStateType>>> {
@@ -70,11 +76,12 @@ export class Stage extends StageBase<InitStateType, ChatStateType, MessageStateT
         const {
             content,
             anonymizedId,
+            promptForId,
             isBot
         } = userMessage;
 
         // Check for player's move.
-        let matches = MOVE_REGEX.exec(content);
+        const matches = content.match(MOVE_REGEX);
         console.log(matches);
         console.log(matches ? matches["0"] : '');
         let aiNote = '';
@@ -105,6 +112,7 @@ export class Stage extends StageBase<InitStateType, ChatStateType, MessageStateT
                 // Must be a valid move; make it so.
                 this.gameState = move(this.gameState, coordinates["start"], coordinates["end"]);
                 visualState = this.buildBoard();
+
                 // TODO: A big flaw of both turns occurring here is that the AI never sees the intermediate FEN and has limited insight into what the user's move accomplished; consider attempting to summarize for them.
 
                 // Then, make a move:
@@ -121,7 +129,9 @@ export class Stage extends StageBase<InitStateType, ChatStateType, MessageStateT
         }
 
         return {
-            stageDirections: `[{{char}} and {{user}} are playing chess. ${aiNote}\nMake remarks based on the FEN of the current board:\n${getFen(this.gameState)}]`,
+            stageDirections: this.replaceTags(
+                `[{{char}} and {{user}} are playing chess. ${aiNote}\nMake remarks based on the FEN of the current board:\n${getFen(this.gameState)}]`,
+                {"user": this.user.name, "char": promptForId ? this.characters[promptForId].name : ''}),
             messageState: null,
             modifiedMessage: null,
             systemMessage: visualState,
@@ -151,7 +161,7 @@ export class Stage extends StageBase<InitStateType, ChatStateType, MessageStateT
     buildBoard(): string {
         let fen: string = getFen(this.gameState);
         fen = fen.substring(0, fen.indexOf(' '));
-        let result = `---\n<span style='font-family: monospace; color: darkseagreen;'>`;
+        let result = `---\n<code>`; //<span style='font-family: monospace; color: darkseagreen;'>`;
         for(let index = 0; index < fen.length; index++) {
             const charAt = fen.charAt(index);
 
@@ -165,14 +175,20 @@ export class Stage extends StageBase<InitStateType, ChatStateType, MessageStateT
                     }
                     break;
                 case '/' == (charAt):
-                    result += `</span>\n<span style='font-family: monospace; color: darkseagreen;'>`;
+                    result += `</code>\n<code>`; //span style='font-family: monospace; color: darkseagreen;'>`;
                     break;
                 default:
                     break;
             }
         }
 
-        return `${result}</span>`;
+        return `${result}</code>`;
+    }
+
+    replaceTags(source: string, replacements: {[name: string]: string}) {
+        return source.replace(/{{([A-z]*)}}/g, (match) => {
+            return replacements[match.substring(2, match.length - 2).toLowerCase()];
+        });
     }
 
 
