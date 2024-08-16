@@ -14,18 +14,18 @@ type ChatStateType = any;
 const MOVE_REGEX = /([a-hA-H][1-8])/gm
 
 const PIECE_MAPPING: {[key: string]: string} = {
-    "K": '<span class="white-piece">\u265A</span>', // \u2654
-    "Q": '<span class="white-piece">\u265B</span>', //'\u2655',
-    "R": '<span class="white-piece">\u265C</span>', //'\u2656',
-    "B": '<span class="white-piece">\u265D</span>', //'\u2657',
-    "N": '<span class="white-piece">\u265E</span>', //'\u2658',
-    "P": '<span class="white-piece">\u265F</span>', //'\u2659',
-    "k": '<span class="black-piece">\u265A</span>',
-    "q": '<span class="black-piece">\u265B</span>',
-    "r": '<span class="black-piece">\u265C</span>',
-    "b": '<span class="black-piece">\u265D</span>',
-    "n": '<span class="black-piece">\u265E</span>',
-    "p": '<span class="black-piece">\u265F</span>'
+    "K": `<span class='white-piece'>\u265A</span>`, // \u2654
+    "Q": `<span class='white-piece'>\u265B</span>`, //'\u2655',
+    "R": `<span class='white-piece'>\u265C</span>`, //'\u2656',
+    "B": `<span class='white-piece'>\u265D</span>`, //'\u2657',
+    "N": `<span class='white-piece'>\u265E</span>`, //'\u2658',
+    "P": `<span class='white-piece'>\u265F</span>`, //'\u2659',
+    "k": `<span class='black-piece'>\u265A</span>`,
+    "q": `<span class='black-piece'>\u265B</span>`,
+    "r": `<span class='black-piece'>\u265C</span>`,
+    "b": `<span class='black-piece'>\u265D</span>`,
+    "n": `<span class='black-piece'>\u265E</span>`,
+    "p": `<span class='black-piece'>\u265F</span>`
 }
 const PIECE_NAME_MAPPING: {[key: string]: string} = {
     "K": 'the white king',
@@ -206,7 +206,7 @@ export class Stage extends StageBase<InitStateType, ChatStateType, MessageStateT
         fen = fen.substring(0, fen.indexOf(' '));
         let result = `---\n`;
         let lines = fen.split('/');
-        result += `<style>.chessboard {width: 100%; padding-bottom: 0; background: darkslategray} div.box {width: 12.5%; padding-bottom: 0; display: flex; align-items: center; justify-content: center; font-size: 100%; font-family: monospace;}.row{width: 100%; height: 12.5%; display: flex;} div.row:nth-child(odd) div.box:nth-child(odd){background: slategray;} div.row:nth-child(even) div.box:nth-child(even){background: slategray;} div.row:nth-child(even) div.box:nth-child(odd) {background: #333;} div.row:nth-child(odd) div.box:nth-child(even){background: #333;} .white-piece{ color: #fff;} .black-piece{ color: #000;}</style>`;
+        result += `<style>.chessboard {width: 100%; padding-bottom: 100%; background: darkslategray} div.box {width: 12.5%; padding-bottom: 0; display: flex; align-items: center; justify-content: center; font-size: 100%; font-family: monospace;}.row{width: 100%; height: 12.5%; display: flex;} div.row:nth-child(odd) div.box:nth-child(odd){background: slategray;} div.row:nth-child(even) div.box:nth-child(even){background: slategray;} div.row:nth-child(even) div.box:nth-child(odd) {background: #333;} div.row:nth-child(odd) div.box:nth-child(even){background: #333;} .white-piece{ color: #fff;} .black-piece{ color: #000;}</style>`;
         result += `<div class='chessboard'>`;
         lines.forEach(line => result += this.buildRow(line));
         result += `</div>`;
