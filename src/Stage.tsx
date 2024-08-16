@@ -49,6 +49,9 @@ export class Stage extends StageBase<InitStateType, ChatStateType, MessageStateT
 
         this.characters = characters;
         this.user = users[Object.keys(users)[0]];
+        if (messageState != null) {
+            this.gameState = JSON.parse(messageState.gameState);
+        }
     }
 
     async load(): Promise<Partial<LoadResponse<InitStateType, ChatStateType, MessageStateType>>> {
@@ -68,6 +71,7 @@ export class Stage extends StageBase<InitStateType, ChatStateType, MessageStateT
     async setState(state: MessageStateType): Promise<void> {
 
         if (state != null) {
+            this.gameState = JSON.parse(state.gameState);
         }
     }
 
@@ -132,7 +136,7 @@ export class Stage extends StageBase<InitStateType, ChatStateType, MessageStateT
             stageDirections: this.replaceTags(
                 `[{{char}} and {{user}} are playing chess. ${aiNote}\nMake remarks about theis move or the current state of the board--additional moves will occur in future responses. Here is the FEN:\n${getFen(this.gameState)}]`,
                 {"user": this.user.name, "char": promptForId ? this.characters[promptForId].name : ''}),
-            messageState: null,
+            messageState: {gameState: JSON.stringify(this.gameState)},
             modifiedMessage: null,
             systemMessage: visualState,
             error: null,
@@ -150,7 +154,7 @@ export class Stage extends StageBase<InitStateType, ChatStateType, MessageStateT
 
         return {
             stageDirections: null,
-            messageState: null,
+            messageState: {gameState: JSON.stringify(this.gameState)},
             modifiedMessage: null,
             error: null,
             systemMessage: this.buildBoard(),
