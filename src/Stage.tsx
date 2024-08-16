@@ -134,7 +134,7 @@ export class Stage extends StageBase<InitStateType, ChatStateType, MessageStateT
 
                 // Then, make a move:
                 const charMove = aiMove(this.gameState, 2);
-                aiNote = `\nThen, ${this.describeMove(Object.keys(charMove)[0], charMove[Object.keys(charMove)[0]], "{{user}}", this.gameState)}`;
+                aiNote = `${aiNote}\nThen, ${this.describeMove(Object.keys(charMove)[0], charMove[Object.keys(charMove)[0]], "{{char}}", this.gameState)}`;
                 this.gameState = move(this.gameState, Object.keys(charMove)[0], charMove[Object.keys(charMove)[0]]);
                 console.log(aiNote);
             } else {
@@ -206,7 +206,7 @@ export class Stage extends StageBase<InitStateType, ChatStateType, MessageStateT
         fen = fen.substring(0, fen.indexOf(' '));
         let result = `---\n`;
         let lines = fen.split('/');
-        result += `<style>.chessboard {padding: 6px; width: 100%; border: 1px solid #333; border-radius: 5px; display: inline-block; margin: auto; background: darkslategray} div.box {width: 12.5%; height: 12.5%; display: flex; align-items: center; justify-content: center; font-size: 10%; font-family: monospace;}.row{display: flex;} div.row:nth-child(odd) div.box:nth-child(odd){background: slategray;} div.row:nth-child(even) div.box:nth-child(even){background: slategray;} div.row:nth-child(even) div.box:nth-child(odd) {background: #333;} div.row:nth-child(odd) div.box:nth-child(even){background: #333;} .white-piece{ color: #fff;} .black-piece{ color: #000;}</style>`;
+        result += `<style>.chessboard {padding: 6px; width: 100%; height: 0; border: 1px solid #333; border-radius: 5px; display: inline-block; margin: auto; background: darkslategray} div.box {width: 12.5%; height: 12.5%; display: flex; align-items: center; justify-content: center; font-size: 10%; font-family: monospace;}.row{display: flex;} div.row:nth-child(odd) div.box:nth-child(odd){background: slategray;} div.row:nth-child(even) div.box:nth-child(even){background: slategray;} div.row:nth-child(even) div.box:nth-child(odd) {background: #333;} div.row:nth-child(odd) div.box:nth-child(even){background: #333;} .white-piece{ color: #fff;} .black-piece{ color: #000;}</style>`;
         result += `<div class='chessboard'>`;
         lines.forEach(line => result += this.buildRow(line));
         result += `</div>`;
