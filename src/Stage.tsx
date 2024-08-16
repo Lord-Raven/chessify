@@ -134,7 +134,7 @@ export class Stage extends StageBase<InitStateType, ChatStateType, MessageStateT
 
         return {
             stageDirections: this.replaceTags(
-                `[{{char}} and {{user}} are playing chess. ${aiNote}\nMake remarks about theis move or the current state of the board--additional moves will occur in future responses. Here is the FEN:\n${getFen(this.gameState)}]`,
+                `[{{char}} and {{user}} are playing chess. Write a response illustrating the most recent events, including {{char}}'s reactions. ${aiNote}\nThis is the only event that has occurred, so make remarks about this move or the current state of the board. Additional moves will occur in future responses. Here is the board's FEN:\n${getFen(this.gameState)}]`,
                 {"user": this.user.name, "char": promptForId ? this.characters[promptForId].name : ''}),
             messageState: {gameState: JSON.stringify(this.gameState)},
             modifiedMessage: null,
