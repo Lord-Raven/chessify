@@ -87,17 +87,17 @@ export class Stage extends StageBase<InitStateType, ChatStateType, MessageStateT
         let aiNote = '';
         let visualState = this.buildBoard();
 
-        if (matches) {
+        if (matches && matches.length > 0) {
             let coordinates: {[key: string]: string} = {};
             const possibleMoves = moves(this.gameState);
-            if (matches["1"]) {
-                coordinates["start"] = matches["0"].toUpperCase();
-                coordinates["end"] = matches["1"].toUpperCase();
+            if (matches.length > 1) {
+                coordinates["start"] = matches[0].toUpperCase();
+                coordinates["end"] = matches[1].toUpperCase();
                 if (!possibleMoves[coordinates["start"]] || !possibleMoves[coordinates["start"]].includes(coordinates["end"])) {
                     aiNote = `{{user}} tried to specify an invalid move. {{char}} may choose to tease or taunt them, but it remains {{user}}'s turn.`;
                 }
             } else {
-                coordinates["end"] = matches["0"].toUpperCase();
+                coordinates["end"] = matches[0].toUpperCase();
                 let possibleStarts = Object.keys(possibleMoves).filter(key => moves[key].includes(coordinates["end"]));
                 if (possibleStarts.length == 1) {
                     coordinates["start"] = possibleStarts[0];
@@ -130,7 +130,7 @@ export class Stage extends StageBase<InitStateType, ChatStateType, MessageStateT
 
         return {
             stageDirections: this.replaceTags(
-                `[{{char}} and {{user}} are playing chess. ${aiNote}\nMake remarks based on the FEN of the current board:\n${getFen(this.gameState)}]`,
+                `[{{char}} and {{user}} are playing chess. ${aiNote}\nMake remarks about theis move or the current state of the board--additional moves will occur in future responses. Here is the FEN:\n${getFen(this.gameState)}]`,
                 {"user": this.user.name, "char": promptForId ? this.characters[promptForId].name : ''}),
             messageState: null,
             modifiedMessage: null,
@@ -161,7 +161,7 @@ export class Stage extends StageBase<InitStateType, ChatStateType, MessageStateT
     buildBoard(): string {
         let fen: string = getFen(this.gameState);
         fen = fen.substring(0, fen.indexOf(' '));
-        let result = `---\n<code>`; //<span style='font-family: monospace; color: darkseagreen;'>`;
+        let result = `---\n<span style='font-family: Courier | monospace; color: darkseagreen;'>`;
         for(let index = 0; index < fen.length; index++) {
             const charAt = fen.charAt(index);
 
@@ -175,14 +175,14 @@ export class Stage extends StageBase<InitStateType, ChatStateType, MessageStateT
                     }
                     break;
                 case '/' == (charAt):
-                    result += `</code>\n<code>`; //span style='font-family: monospace; color: darkseagreen;'>`;
+                    result += `</span>\n<span style='font-family: Courier | monospace; color: darkseagreen;'>`;
                     break;
                 default:
                     break;
             }
         }
 
-        return `${result}</code>`;
+        return `${result}</span>`;
     }
 
     replaceTags(source: string, replacements: {[name: string]: string}) {
