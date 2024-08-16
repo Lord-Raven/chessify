@@ -150,33 +150,40 @@ export class Stage extends StageBase<InitStateType, ChatStateType, MessageStateT
         };
     }
 
+    addSpace(char: string): string {
+        return `<div class='box'>${char}</div>`;
+    }
+
+    buildRow(contents: string): string {
+        let result = `<div class='container'>`;
+        for(let index = 0; index < contents.length; index++) {
+            const charAt = contents.charAt(index);
+
+            switch (true) {
+                case /[bknpqrBKNPQR]/.test(charAt):
+                    result += this.addSpace(`${PIECE_MAPPING[charAt]}`);
+                    break;
+                case /\d/.test(charAt):
+                    for (let i = 0; i < Number(charAt); i++) {
+                        result += this.addSpace(` `);
+                    }
+                    break;
+                default:
+            }
+        }
+        result += `</div>`;
+        return result;
+    }
+
     buildBoard(): string {
         let fen: string = getFen(this.gameState);
         fen = fen.substring(0, fen.indexOf(' '));
         let result = `---\n`;
-        result += `<style>.container{display: flex; width: 100%;}.box {width: 50px;height: 50px; display: flex; align-items: center; justify-content: center; font-size: 24px; color: white;}.box:nth-child(odd) {background-color: transparent;}.box:nth-child(even) {background-color: #666666;}</style></head><div class='container'><div class='box'>A</div><div class='box'>B</box></div></div>`;
-        result += `\n<span style='font-size: 3rem; font-family: FreeMono, monospace; color: darkseagreen;'>`
-        for(let index = 0; index < fen.length; index++) {
-            const charAt = fen.charAt(index);
+        let lines = fen.split('/');
+        result += `<style>.container{display: flex; width: 100%;}.box {width: 50px;height: 50px; display: flex; align-items: center; justify-content: center; font-size: 24px; color: darkseagreen;}.box:nth-child(odd) {background-color: transparent;}.box:nth-child(even) {background-color: #666666;}</style></head><div class='container'></div>`;
+        lines.forEach(line => result += this.buildRow(line));
 
-            switch (true) {
-                case /[bknpqrBKNPQR]/.test(charAt):
-                    result += ` ${PIECE_MAPPING[charAt]}`;
-                    break;
-                case /\d/.test(charAt):
-                    for (let i = 0; i < Number(charAt); i++) {
-                        result += ` .`;
-                    }
-                    break;
-                case '/' == (charAt):
-                    result += `</span>\n<span style='font-size: 4rem; font-family: SFMono-Regular, Consolas, Liberation Mono, Menlo, Courier, monospace; color: darkseagreen;'>`;
-                    break;
-                default:
-                    break;
-            }
-        }
-
-        return `${result}</span>`;
+        return `${result}`;
     }
 
     replaceTags(source: string, replacements: {[name: string]: string}) {
