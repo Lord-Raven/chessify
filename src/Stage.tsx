@@ -14,18 +14,18 @@ type ChatStateType = any;
 const MOVE_REGEX = /([a-hA-H][1-8])/gm
 
 const PIECE_MAPPING: {[key: string]: string} = {
-    "K": `<text x='2' y='17' class='white-piece'>\u265A</text>`, // \u2654
-    "Q": `<text x='2' y='17' class='white-piece'>\u265B</text>`, //'\u2655',
-    "R": `<text x='2' y='17' class='white-piece'>\u265C</text>`, //'\u2656',
-    "B": `<text x='2' y='17' class='white-piece'>\u265D</text>`, //'\u2657',
-    "N": `<text x='2' y='17' class='white-piece'>\u265E</text>`, //'\u2658',
-    "P": `<text x='2' y='17' class='white-piece'>\u265F</text>`, //'\u2659',
-    "k": `<text x='2' y='17' class='black-piece'>\u265A</text>`,
-    "q": `<text x='2' y='17' class='black-piece'>\u265B</text>`,
-    "r": `<text x='2' y='17' class='black-piece'>\u265C</text>`,
-    "b": `<text x='2' y='17' class='black-piece'>\u265D</text>`,
-    "n": `<text x='2' y='17' class='black-piece'>\u265E</text>`,
-    "p": `<text x='2' y='17' class='black-piece'>\u265F</text>`
+    "K": `<tspan class='white-piece'>\u265A</tspan>`, //'\u2654',
+    "Q": `<tspan class='white-piece'>\u265B</tspan>`, //'\u2655',
+    "R": `<tspan class='white-piece'>\u265C</tspan>`, //'\u2656',
+    "B": `<tspan class='white-piece'>\u265D</tspan>`, //'\u2657',
+    "N": `<tspan class='white-piece'>\u265E</tspan>`, //'\u2658',
+    "P": `<tspan class='white-piece'>\u265F</tspan>`, //'\u2659',
+    "k": `<tspan class='black-piece'>\u265A</tspan>`,
+    "q": `<tspan class='black-piece'>\u265B</tspan>`,
+    "r": `<tspan class='black-piece'>\u265C</tspan>`,
+    "b": `<tspan class='black-piece'>\u265D</tspan>`,
+    "n": `<tspan class='black-piece'>\u265E</tspan>`,
+    "p": `<tspan class='black-piece'>\u265F</tspan>`
 }
 const PIECE_NAME_MAPPING: {[key: string]: string} = {
     "K": 'the white king',
@@ -177,7 +177,7 @@ export class Stage extends StageBase<InitStateType, ChatStateType, MessageStateT
     }
 
     addSpace(char: string): string {
-        return `<div class='box'><svg style='width: 100%; height: 100%;' viewBox='0 0 20 20'>${char}</svg></div>`;
+        return `<div class='box'><svg style='width: 100%; height: 100%;' viewBox='0 0 20 20'><text x='2' y='17'>${char}</text></svg></div>`;
     }
 
     buildRow(contents: string): string {
@@ -206,7 +206,7 @@ export class Stage extends StageBase<InitStateType, ChatStateType, MessageStateT
         fen = fen.substring(0, fen.indexOf(' '));
         let result = `---\n`;
         let lines = fen.split('/');
-        result += `<style>.play-area {width: 50%; padding-bottom: 100%; position: relative;}.chessboard {width: 100%; height: 100%; position: absolute; top: 0; left: 0; background: darkslategray} .row{width: 100%; height: 12.5%; display: flex;} div.box {width: 12.5%; height: 100%; display: flex; align-items: center; justify-content: center; font-size: 100%; font-family: monospace;} div.row:nth-child(odd) div.box:nth-child(odd){background: slategray;} div.row:nth-child(even) div.box:nth-child(even){background: slategray;} div.row:nth-child(even) div.box:nth-child(odd) {background: #333;} div.row:nth-child(odd) div.box:nth-child(even){background: #333;} .white-piece{ color: #fff;} .black-piece{ color: #000;}</style>`;
+        result += `<style>.play-area {width: 50%; padding-bottom: 50%; position: relative;}.chessboard {width: 100%; height: 100%; position: absolute; top: 0; left: 0; background: darkslategray} .row{width: 100%; height: 12.5%; display: flex;} div.box {width: 12.5%; height: 100%; display: flex; align-items: center; justify-content: center; font-size: 100%; font-family: monospace;} div.row:nth-child(odd) div.box:nth-child(odd){background: slategray;} div.row:nth-child(even) div.box:nth-child(even){background: slategray;} div.row:nth-child(even) div.box:nth-child(odd) {background: #333;} div.row:nth-child(odd) div.box:nth-child(even){background: #333;} .white-piece{ fill: #fff;} .black-piece{ fill: #000;}</style>`;
         result += `<div class='play-area'><div class='chessboard'>`;
         lines.forEach(line => result += this.buildRow(line));
         result += `</div></div>`;
