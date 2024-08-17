@@ -243,7 +243,7 @@ export class Stage extends StageBase<InitStateType, ChatStateType, MessageStateT
                     .top-area {width: 100%; height: 95%;}
                     .y-axis {width: 5%; height: 100%; position: absolute; float: left; top: 0;}
                         .y-label {width: 100%; height: 12.5%;}
-                    .chessboard {width: 75%; height: 100%; position: absolute; top: 0; left: 0; background: darkslategray}
+                    .chessboard {width: 75%; height: 100%; position: absolute; top: 0; left: 5%; background: darkslategray}
                         .row{width: 100%; height: 12%; display: flex;} 
                         div.space {width: 12%; height: 100%; display: flex; font-family: monospace;} 
                         div.row:nth-child(odd) div.space:nth-child(odd){background: slategray;} 
