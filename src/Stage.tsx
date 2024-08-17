@@ -251,7 +251,7 @@ export class Stage extends StageBase<InitStateType, ChatStateType, MessageStateT
                         .space {width: 12.5%; height: 100%; display: flex; font-family: monospace; background: slategray; fill: #333;}
                         .white-piece{ fill: #fff;} 
                         .black-piece{ fill: #000;}
-                    .discard {width: 20%; height: 100%; position: absolute; float: right; top: 0; right: 0;  background: darkslategray}
+                    .discard {width: 25%; height: 100%; position: absolute; float: right; top: 0; right: 0;  background: darkslategray}
                         .discard-black{width: 100%; height: 50%; display: flex;}
                         .discard-white{width: 100%; height: 50%; display: flex}
                         .discard-space {width: 25%; display: flex; font-family: monospace;}
