@@ -211,11 +211,11 @@ export class Stage extends StageBase<InitStateType, ChatStateType, MessageStateT
 
             switch (true) {
                 case /[bknpqrBKNPQR]/.test(charAt):
-                    result += this.addSpace(`${PIECE_MAPPING[charAt]}`, coords, `space${(rowNum * 8 + index) % 2}`);
+                    result += this.addSpace(`${PIECE_MAPPING[charAt]}`, coords, `space`);//${(rowNum * 8 + index) % 2}`);
                     break;
                 case /\d/.test(charAt):
                     for (let i = 0; i < Number(charAt); i++) {
-                        result += this.addSpace(` `, coords, `space${(rowNum * 8 + index) % 2}`);
+                        result += this.addSpace(` `, coords, `space`);//${(rowNum * 8 + index) % 2}`);
                     }
                     break;
                 default:
@@ -246,10 +246,9 @@ export class Stage extends StageBase<InitStateType, ChatStateType, MessageStateT
         let lines = fen.split('/');
         result += `<style>
                     .play-area {width: 80%; padding-bottom: 60%; border: 1px solid #333; border-radius: 5px; position: relative; display: table;}
-                    .chessboard {width: 75%; height: 100%; position: absolute; top: 0; left: 5%; background: darkslategray}
-                        .row{width: 100%; height: 12%; display: flex;}
-                        .space0 {width: 12%; height: 100%; display: flex; font-family: monospace; background: slategray; fill: #333;}
-                        .space1 {width: 12%; height: 100%; display: flex; font-family: monospace; background: #333; fill: slategray;}
+                    .chessboard {width: 75%; height: 100%; position: absolute; top: 0; left: 0; background: darkslategray}
+                        .row{width: 100%; height: 12.5%; display: flex;}
+                        .space {width: 12.5%; height: 100%; display: flex; font-family: monospace; background: slategray; fill: #333;}
                         .white-piece{ fill: #fff;} 
                         .black-piece{ fill: #000;}
                     .discard {width: 20%; height: 100%; position: absolute; float: right; top: 0; right: 0;  background: darkslategray}
