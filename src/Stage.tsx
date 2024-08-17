@@ -194,22 +194,22 @@ export class Stage extends StageBase<InitStateType, ChatStateType, MessageStateT
         return `${description}.`;
     }
 
-    addSpace(char: string, type: string): string {
-        return `<div class='${type}'><svg style='width: 100%; height: 100%;' viewBox='0 0 20 20'><text x='2' y='17'>${char}</text></svg></div>`;
+    addSpace(char: string, coords: string, type: string): string {
+        return `<div class='${type}'><svg style='width: 100%; height: 100%;' viewBox='0 0 20 20'><text x='0.1' y='18.5' style='font: italic 3px sans-serif;'>${coords}</text><text x='2' y='17'>${char}</text></svg></div>`;
     }
 
-    buildRow(contents: string): string {
+    buildRow(contents: string, rowNum: string): string {
         let result = `<div class='row'>`;
         for(let index = 0; index < contents.length; index++) {
             const charAt = contents.charAt(index);
 
             switch (true) {
                 case /[bknpqrBKNPQR]/.test(charAt):
-                    result += this.addSpace(`${PIECE_MAPPING[charAt]}`, 'space');
+                    result += this.addSpace(`${PIECE_MAPPING[charAt]}`, `${String.fromCharCode('A'.charCodeAt(0) + index)}${rowNum}`, 'space');
                     break;
                 case /\d/.test(charAt):
                     for (let i = 0; i < Number(charAt); i++) {
-                        result += this.addSpace(` `, 'space');
+                        result += this.addSpace(` `, `${String.fromCharCode('A'.charCodeAt(0) + index)}${rowNum}`, 'space');
                     }
                     break;
                 default:
@@ -222,11 +222,11 @@ export class Stage extends StageBase<InitStateType, ChatStateType, MessageStateT
     buildDiscard(): string {
         let result = `<div class='discard'><div class='discard-black'>`;
         for (let index = 0; index < this.takenBlacks.length; index++) {
-            result += this.addSpace(`${PIECE_MAPPING[this.takenBlacks.charAt(index)]}`, 'discard-space');
+            result += this.addSpace(`${PIECE_MAPPING[this.takenBlacks.charAt(index)]}`, '', 'discard-space');
         }
         result += `</div><div class='discard-white'>`
         for (let index = 0; index < this.takenWhites.length; index++) {
-            result += this.addSpace(`${PIECE_MAPPING[this.takenWhites.charAt(index)]}`, 'discard-space');
+            result += this.addSpace(`${PIECE_MAPPING[this.takenWhites.charAt(index)]}`, '', 'discard-space');
         }
         result += `</div></div>`;
 
@@ -240,40 +240,25 @@ export class Stage extends StageBase<InitStateType, ChatStateType, MessageStateT
         let lines = fen.split('/');
         result += `<style>
                     .play-area {width: 80%; padding-bottom: 60%; border: 1px solid #333; border-radius: 5px; position: relative; display: table;}
-                    .top-area {width: 100%; height: 95%;}
-                    .y-axis {width: 5%; height: 100%; position: absolute; float: left; top: 0;}
-                        .y-label {width: 100%; height: 12.5%;}
                     .chessboard {width: 75%; height: 100%; position: absolute; top: 0; left: 5%; background: darkslategray}
-                        .row{width: 100%; height: 12%; display: flex;} 
-                        div.space {width: 12%; height: 100%; display: flex; font-family: monospace;} 
-                        div.row:nth-child(odd) div.space:nth-child(odd){background: slategray;} 
-                        div.row:nth-child(even) div.space:nth-child(even){background: slategray;} 
-                        div.row:nth-child(even) div.space:nth-child(odd) {background: #333;} 
-                        div.row:nth-child(odd) div.space:nth-child(even){background: #333;} 
+                        .row{width: 100%; height: 12%; display: flex;}
+                        div.space {width: 12%; height: 100%; display: flex; font-family: monospace;}
+                        div.row:nth-child(odd) div.space:nth-child(odd){background: slategray; fill: #333;}
+                        div.row:nth-child(even) div.space:nth-child(even){background: slategray; fill: #333;}
+                        div.row:nth-child(even) div.space:nth-child(odd) {background: #333; fill: slategray;}
+                        div.row:nth-child(odd) div.space:nth-child(even){background: #333; fill: slategray;}
                         .white-piece{ fill: #fff;} 
                         .black-piece{ fill: #000;}
-                    .discard {width: 20%; height: 100%; position: absolute; float: right; top: 0; right: 0;  background: darkslategray} 
-                        .discard-black{width: 100%; height: 50%; display: flex;} 
-                        .discard-white{width: 100%; height: 50%; display: flex} 
-                        .discard-space {width: 25%; display: flex; font-family: monospace;} 
-                    
-                    .x-axis {width: 75%; height: 5%; position: absolute; bottom: 0;}
-                    .x-axis-spacer {width: 5%; height: 5%; position: absolute; bottom: 0;}
-                    .x-label {width: 12.5%; height: 5%;}
-                    
+                    .discard {width: 20%; height: 100%; position: absolute; float: right; top: 0; right: 0;  background: darkslategray}
+                        .discard-black{width: 100%; height: 50%; display: flex;}
+                        .discard-white{width: 100%; height: 50%; display: flex}
+                        .discard-space {width: 25%; display: flex; font-family: monospace;}
                   </style>`;
-        result += `<div class='play-area'><div class='top-area'><div class='y-axis'>`;
-        for (let index = 8; index > 0; index--) {
-            result += `<div class='y-label'>${index}</div>`;
+        result += `<div class='play-area'><div class='chessboard'>`;
+        for (let index = 0; index < lines.length; index++) {
+            result += this.buildRow(lines[index], `${index + 1}`);
         }
-        result += `</div><div class='chessboard'>`;
-        lines.forEach(line => result += this.buildRow(line));
         result += `</div>${this.buildDiscard()}</div>`;
-        result += `<div class='x-axis'><div class='x-axis-spacer'></div>`;
-        for (let index = 0; index < 8; index++) {
-            result += `<div class='x-label'>${String.fromCharCode('A'.charCodeAt(0) + index)}</div>`;
-        }
-        result += `</div>`;
         return `${result}`;
     }
 
