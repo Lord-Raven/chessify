@@ -189,7 +189,7 @@ export class Stage extends StageBase<InitStateType, ChatStateType, MessageStateT
     describeMove(start: string, end: string, playerTag: string, gameState: any) {
         let description = `${playerTag} moves ${PIECE_NAME_MAPPING[gameState.pieces[start]]} from ${start} to ${end}`;
         if (gameState.pieces[end]) {
-            description += `, capturing ${gameState.pieces[end]}`;
+            description += `, capturing ${PIECE_NAME_MAPPING[gameState.pieces[end]]}`;
         }
         return `${description}.`;
     }
@@ -224,7 +224,7 @@ export class Stage extends StageBase<InitStateType, ChatStateType, MessageStateT
         for (let index = 0; index < this.takenBlacks.length; index++) {
             result += this.addSpace(`${PIECE_MAPPING[this.takenBlacks.charAt(index)]}`, 'discard-space');
         }
-        result += `</div><div class='discard'><div class='discard-white'>`
+        result += `</div><div class='discard-white'>`
         for (let index = 0; index < this.takenWhites.length; index++) {
             result += this.addSpace(`${PIECE_MAPPING[this.takenWhites.charAt(index)]}`, 'discard-space');
         }
