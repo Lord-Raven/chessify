@@ -211,11 +211,11 @@ export class Stage extends StageBase<InitStateType, ChatStateType, MessageStateT
 
             switch (true) {
                 case /[bknpqrBKNPQR]/.test(charAt):
-                    result += this.addSpace(`${PIECE_MAPPING[charAt]}`, coords, `space-${(rowNum * 8 + index) % 2}`);
+                    result += this.addSpace(`${PIECE_MAPPING[charAt]}`, coords, `greg`);//${(rowNum * 8 + index) % 2}`);
                     break;
                 case /\d/.test(charAt):
                     for (let i = 0; i < Number(charAt); i++) {
-                        result += this.addSpace(` `, coords, `space-${(rowNum * 8 + index) % 2}`);
+                        result += this.addSpace(` `, coords, `greg`);//${(rowNum * 8 + index) % 2}`);
                     }
                     break;
                 default:
@@ -248,7 +248,7 @@ export class Stage extends StageBase<InitStateType, ChatStateType, MessageStateT
                     .play-area {width: 80%; padding-bottom: 60%; border: 1px solid #333; border-radius: 5px; position: relative; display: table;}
                     .chessboard {width: 75%; height: 100%; position: absolute; top: 0; left: 0; background: darkslategray}
                         .row{width: 100%; height: 12.5%; display: flex;}
-                        .space-0 {width: 12.5%; height: 100%; display: flex; font-family: monospace; background: slategray; fill: #333;}
+                        .greg {width: 12.5%; height: 100%; display: flex; font-family: monospace; background: slategray; fill: #333;}
                         .space-1 {width: 12.5%; height: 100%; display: flex; font-family: monospace; background: #333; fill: slategray;}
                         .white-piece{ fill: #fff;} 
                         .black-piece{ fill: #000;}
