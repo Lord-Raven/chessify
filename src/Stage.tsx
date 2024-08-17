@@ -267,7 +267,7 @@ export class Stage extends StageBase<InitStateType, ChatStateType, MessageStateT
         lines.forEach(line => result += this.buildRow(line));
         result += `</div>${this.buildDiscard()}`;
         result += `<div class='x-axis'><div class='x-axis-spacer'></div>`;
-        for (let index = 0; index <= 8; index--) {
+        for (let index = 0; index < 8; index++) {
             result += `<div class='x-label'>${String.fromCharCode('A'.charCodeAt(0) + index)}</div>`;
         }
         result += `</div>`;
