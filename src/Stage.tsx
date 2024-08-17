@@ -197,12 +197,8 @@ export class Stage extends StageBase<InitStateType, ChatStateType, MessageStateT
     addSpace(char: string, coords: string, type: string): string {
         return `<div class='${type}'>
                     <svg style='width: 100%; height: 100%;' viewBox='0 0 20 20'>
-                        <text x='0.2' y='18.6' style='font: italic 3px sans-serif;'>
-                            ${coords}
-                        </text>
-                        <text x='2' y='16.5'>
-                            ${char}
-                        </text>
+                        <text x='0.2' y='18.6' style='font: italic 3px sans-serif;'>${coords}</text>
+                        <text x='2' y='16.5'>${char}</text>
                     </svg>
                 </div>`;
     }
