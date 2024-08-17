@@ -145,7 +145,16 @@ export class Stage extends StageBase<InitStateType, ChatStateType, MessageStateT
                 this.takenBlacks = 'kqrrbbnnpppppppp';
                 this.takenWhites = 'KQRRBBNNPPPPPPPP';
                 const pieces: string[] = Object.values(this.gameState.pieces);
-                pieces.forEach(piece => {console.log(piece);this.takenBlacks.slice(this.takenBlacks.indexOf(piece), this.takenBlacks.indexOf(piece) + 1); this.takenWhites.slice(this.takenWhites.indexOf(piece), this.takenWhites.indexOf(piece) + 1)});
+                pieces.forEach(piece => {
+                    const blackIndex = this.takenBlacks.indexOf(piece);
+                    if (blackIndex > -1) {
+                        this.takenBlacks = this.takenBlacks.slice(0, blackIndex) + this.takenBlacks.slice(blackIndex + 1);
+                    }
+                    const whiteIndex = this.takenWhites.indexOf(piece);
+                    if (whiteIndex > -1) {
+                        this.takenWhites = this.takenWhites.slice(0, whiteIndex) + this.takenWhites.slice(whiteIndex + 1);
+                    }
+                });
             } else {
                 console.log('Player did not input a legal move.');
             }
@@ -229,7 +238,7 @@ export class Stage extends StageBase<InitStateType, ChatStateType, MessageStateT
         fen = fen.substring(0, fen.indexOf(' '));
         let result = `---\n`;
         let lines = fen.split('/');
-        result += `<style>.play-area {width: 80%; padding-bottom: 60%; border: 1px solid #333; border-radius: 5px; position: relative;} .chessboard {width: 75%; height: 100%; position: absolute; top: 0; left: 0; background: darkslategray} .discard {width: 25%; height: 100%; position: absolute; float: right; top: 0; right: 0;  background: darkslategray} .discard-black{width: 100%; height: 50%; display: flex;} .discard-white{width: 100%; height: 50%; display: flex} .discardSpace {width: 25%; display: flex;} .row{width: 100%; height: 12.5%; display: flex;} div.space {width: 12.5%; height: 100%; display: flex; align-items: center; justify-content: center; font-size: 100%; font-family: monospace;} div.row:nth-child(odd) div.space:nth-child(odd){background: slategray;} div.row:nth-child(even) div.space:nth-child(even){background: slategray;} div.row:nth-child(even) div.space:nth-child(odd) {background: #333;} div.row:nth-child(odd) div.space:nth-child(even){background: #333;} .white-piece{ fill: #fff;} .black-piece{ fill: #000;}</style>`;
+        result += `<style>.play-area {width: 80%; padding-bottom: 60%; border: 1px solid #333; border-radius: 5px; position: relative;} .chessboard {width: 75%; height: 100%; position: absolute; top: 0; left: 0; background: darkslategray} .discard {width: 25%; height: 100%; position: absolute; float: right; top: 0; right: 0;  background: darkslategray} .discard-black{width: 100%; height: 50%; display: flex;} .discard-white{width: 100%; height: 50%; display: flex} .discard-space {width: 25%; display: flex; font-family: monospace;} .row{width: 100%; height: 12.5%; display: flex;} div.space {width: 12.5%; height: 100%; display: flex; font-family: monospace;} div.row:nth-child(odd) div.space:nth-child(odd){background: slategray;} div.row:nth-child(even) div.space:nth-child(even){background: slategray;} div.row:nth-child(even) div.space:nth-child(odd) {background: #333;} div.row:nth-child(odd) div.space:nth-child(even){background: #333;} .white-piece{ fill: #fff;} .black-piece{ fill: #000;}</style>`;
         result += `<div class='play-area'><div class='chessboard'>`;
         lines.forEach(line => result += this.buildRow(line));
         result += `</div>${this.buildDiscard()}`;
