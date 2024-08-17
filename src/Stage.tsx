@@ -145,7 +145,7 @@ export class Stage extends StageBase<InitStateType, ChatStateType, MessageStateT
                 this.takenBlacks = 'kqrrbbnnpppppppp';
                 this.takenWhites = 'KQRRBBNNPPPPPPPP';
                 const pieces: string[] = Object.values(this.gameState.pieces);
-                pieces.forEach(piece => {this.takenBlacks.slice(this.takenBlacks.indexOf(piece), this.takenBlacks.indexOf(piece) + 1); this.takenWhites.slice(this.takenWhites.indexOf(piece), this.takenWhites.indexOf(piece) + 1)});
+                pieces.forEach(piece => {console.log(piece);this.takenBlacks.slice(this.takenBlacks.indexOf(piece), this.takenBlacks.indexOf(piece) + 1); this.takenWhites.slice(this.takenWhites.indexOf(piece), this.takenWhites.indexOf(piece) + 1)});
             } else {
                 console.log('Player did not input a legal move.');
             }
@@ -213,11 +213,11 @@ export class Stage extends StageBase<InitStateType, ChatStateType, MessageStateT
     buildDiscard(): string {
         let result = `<div class='discard'><div class='discard-black'>`;
         for (let index = 0; index < this.takenBlacks.length; index++) {
-            result += this.addSpace(`${PIECE_MAPPING[this.takenBlacks.charAt(index)]}`, 'discard-black');
+            result += this.addSpace(`${PIECE_MAPPING[this.takenBlacks.charAt(index)]}`, 'discard-space');
         }
         result += `</div><div class='discard'><div class='discard-white'>`
         for (let index = 0; index < this.takenWhites.length; index++) {
-            result += this.addSpace(`${PIECE_MAPPING[this.takenWhites.charAt(index)]}`, 'discard-white');
+            result += this.addSpace(`${PIECE_MAPPING[this.takenWhites.charAt(index)]}`, 'discard-space');
         }
         result += `</div></div>`;
 
