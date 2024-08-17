@@ -270,6 +270,7 @@ export class Stage extends StageBase<InitStateType, ChatStateType, MessageStateT
         for (let index = 0; index <= 8; index--) {
             result += `<div class='x-label'>${String.fromCharCode('A'.charCodeAt(0) + index)}</div>`;
         }
+        result += `</div>`;
         return `${result}`;
     }
 
