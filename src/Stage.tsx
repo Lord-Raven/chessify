@@ -45,8 +45,12 @@ export class Stage extends StageBase<InitStateType, ChatStateType, MessageStateT
 
     gameState: any;
 
+    // Not saved:
     characters: {[key: string]: Character};
     user: User;
+    takenBlacks: string = '';
+    takenWhites: string = '';
+
 
     constructor(data: InitialData<InitStateType, ChatStateType, MessageStateType, ConfigType>) {
 
@@ -99,7 +103,6 @@ export class Stage extends StageBase<InitStateType, ChatStateType, MessageStateT
         console.log(matches);
         console.log(matches ? matches["0"] : '');
         let aiNote = '';
-        let visualState = this.buildBoard();
 
         if (matches && matches.length > 0) {
             let coordinates: {[key: string]: string} = {};
@@ -127,16 +130,22 @@ export class Stage extends StageBase<InitStateType, ChatStateType, MessageStateT
                 aiNote = `${this.describeMove(coordinates["start"], coordinates["end"], "{{user}}", this.gameState)}`;
                 this.gameState = move(this.gameState, coordinates["start"], coordinates["end"]);
 
-                visualState = this.buildBoard();
+                //visualState = this.buildBoard();
                 console.log(this.gameState);
 
                 // TODO: A big flaw of both turns occurring here is that the AI never sees the intermediate FEN and has limited insight into what the user's move accomplished; consider attempting to summarize for them.
 
-                // Then, make a move:
+                // Then, make an AI move:
                 const charMove = aiMove(this.gameState, 2);
                 aiNote = `${aiNote}\nThen, ${this.describeMove(Object.keys(charMove)[0], charMove[Object.keys(charMove)[0]], "{{char}}", this.gameState)}`;
                 this.gameState = move(this.gameState, Object.keys(charMove)[0], charMove[Object.keys(charMove)[0]]);
                 console.log(aiNote);
+
+                // Calculate captured pieces:
+                this.takenBlacks = 'kqrrbbnnpppppppp';
+                this.takenWhites = 'KQRRBBNNPPPPPPPP';
+                const pieces: string[] = Object.values(this.gameState.pieces);
+                pieces.forEach(piece => {this.takenBlacks.slice(this.takenBlacks.indexOf(piece), this.takenBlacks.indexOf(piece) + 1); this.takenWhites.slice(this.takenWhites.indexOf(piece), this.takenWhites.indexOf(piece) + 1)});
             } else {
                 console.log('Player did not input a legal move.');
             }
@@ -150,7 +159,7 @@ export class Stage extends StageBase<InitStateType, ChatStateType, MessageStateT
                 {"user": this.user.name, "char": promptForId ? this.characters[promptForId].name : ''}),
             messageState: {gameState: JSON.stringify(this.gameState)},
             modifiedMessage: null,
-            systemMessage: visualState,
+            systemMessage: null,
             error: null,
             chatState: null,
         };
@@ -176,8 +185,8 @@ export class Stage extends StageBase<InitStateType, ChatStateType, MessageStateT
         return `${description}.`;
     }
 
-    addSpace(char: string): string {
-        return `<div class='box'><svg style='width: 100%; height: 100%;' viewBox='0 0 20 20'><text x='2' y='17'>${char}</text></svg></div>`;
+    addSpace(char: string, type: string): string {
+        return `<div class='${type}'><svg style='width: 100%; height: 100%;' viewBox='0 0 20 20'><text x='2' y='17'>${char}</text></svg></div>`;
     }
 
     buildRow(contents: string): string {
@@ -187,11 +196,11 @@ export class Stage extends StageBase<InitStateType, ChatStateType, MessageStateT
 
             switch (true) {
                 case /[bknpqrBKNPQR]/.test(charAt):
-                    result += this.addSpace(`${PIECE_MAPPING[charAt]}`);
+                    result += this.addSpace(`${PIECE_MAPPING[charAt]}`, 'space');
                     break;
                 case /\d/.test(charAt):
                     for (let i = 0; i < Number(charAt); i++) {
-                        result += this.addSpace(` `);
+                        result += this.addSpace(` `, 'space');
                     }
                     break;
                 default:
@@ -201,15 +210,29 @@ export class Stage extends StageBase<InitStateType, ChatStateType, MessageStateT
         return result;
     }
 
+    buildDiscard(): string {
+        let result = `<div class='discard'><div class='discard-black'>`;
+        for (let index = 0; index < this.takenBlacks.length; index++) {
+            result += this.addSpace(`${PIECE_MAPPING[this.takenBlacks.charAt(index)]}`, 'discard-black');
+        }
+        result += `</div><div class='discard'><div class='discard-white'>`
+        for (let index = 0; index < this.takenWhites.length; index++) {
+            result += this.addSpace(`${PIECE_MAPPING[this.takenWhites.charAt(index)]}`, 'discard-white');
+        }
+        result += `</div></div>`;
+
+        return result;
+    }
+
     buildBoard(): string {
         let fen: string = getFen(this.gameState);
         fen = fen.substring(0, fen.indexOf(' '));
         let result = `---\n`;
         let lines = fen.split('/');
-        result += `<style>.play-area {width: 80%; padding-bottom: 60%; position: relative;} .chessboard {width: 75%; height: 100%; position: absolute; top: 0; left: 0; background: darkslategray} .discard {width: 25%; height: 100%; position: absolute; float: right; top: 0; right: 0;  background: red} .row{width: 100%; height: 12.5%; display: flex;} div.box {width: 12.5%; height: 100%; display: flex; align-items: center; justify-content: center; font-size: 100%; font-family: monospace;} div.row:nth-child(odd) div.box:nth-child(odd){background: slategray;} div.row:nth-child(even) div.box:nth-child(even){background: slategray;} div.row:nth-child(even) div.box:nth-child(odd) {background: #333;} div.row:nth-child(odd) div.box:nth-child(even){background: #333;} .white-piece{ fill: #fff;} .black-piece{ fill: #000;}</style>`;
+        result += `<style>.play-area {width: 80%; padding-bottom: 60%; border: 1px solid #333; border-radius: 5px; position: relative;} .chessboard {width: 75%; height: 100%; position: absolute; top: 0; left: 0; background: darkslategray} .discard {width: 25%; height: 100%; position: absolute; float: right; top: 0; right: 0;  background: darkslategray} .discard-black{width: 100%; height: 50%; display: flex;} .discard-white{width: 100%; height: 50%; display: flex} .discardSpace {width: 25%; display: flex;} .row{width: 100%; height: 12.5%; display: flex;} div.space {width: 12.5%; height: 100%; display: flex; align-items: center; justify-content: center; font-size: 100%; font-family: monospace;} div.row:nth-child(odd) div.space:nth-child(odd){background: slategray;} div.row:nth-child(even) div.space:nth-child(even){background: slategray;} div.row:nth-child(even) div.space:nth-child(odd) {background: #333;} div.row:nth-child(odd) div.space:nth-child(even){background: #333;} .white-piece{ fill: #fff;} .black-piece{ fill: #000;}</style>`;
         result += `<div class='play-area'><div class='chessboard'>`;
         lines.forEach(line => result += this.buildRow(line));
-        result += `</div><div class='discard'>Discard here.</div></div>`;
+        result += `</div>${this.buildDiscard()}`;
         return `${result}`;
     }
 
