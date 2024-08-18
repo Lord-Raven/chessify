@@ -44,7 +44,7 @@ const PIECE_NAME_MAPPING: {[key: string]: string} = {
 export class Stage extends StageBase<InitStateType, ChatStateType, MessageStateType, ConfigType> {
 
     // Saved:
-    gameState: any;
+    gameState: any = null;
     wins: number = 0;
     losses: number = 0;
     draws: number = 0;
@@ -150,9 +150,9 @@ export class Stage extends StageBase<InitStateType, ChatStateType, MessageStateT
                     if (possibleStarts.length == 1) {
                         coordinates["start"] = possibleStarts[0];
                     } else if (possibleStarts.length > 1) {
-                        aiNote = `{{user}} tried to specify only an ending position, but multiple pieces could make that move. {{char}} may choose to tease or taunt them, but it remains {{user}}'s turn.`;
+                        aiNote = `{{user}} has not yet made a move; {{char}} may choose to banter with {{user}}, but it remains {{user}}'s turn in this response.`;
                     } else {
-                        aiNote = `{{user}} tried to specify an ending position that no piece can move to. {{char}} may choose to tease or taunt them, but it remains {{user}}'s turn.`;
+                        aiNote = `{{user}} has not yet made a move; {{char}} may choose to banter with {{user}}, but it remains {{user}}'s turn in this response.`;
                     }
                 }
 
