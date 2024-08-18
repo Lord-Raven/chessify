@@ -11,21 +11,19 @@ creator_notes: "I don't even like chess. But for all you sickos out there who do
 well, I'd rather you indulged here than out in the real world.
 <br>
 <br>
-This stage allows you to play chess with any bot by saying \"play chess.\" You will play white and input moves in a coordinate to coordinate (e.g., \"A2 to A4\") format. 
+This stage allows you to play chess with any bot by saying \"play chess.\" You will play white and input moves in a coordinate to coordinate format (e.g., \"A2 to A4\"). 
 The stage does not understand natural language or algebraic notation (although coordinates and other key words can be embedded in your RP and still function). 
 You may also forfeit with \"knock over the board,\" if you tire of the game.
 <br>
 <br>
-You can use the stage's settings to tweak AI difficulty or board scaling.
+I don't yet have any personal bots that I want to attach this to as an example, but you can add it to any chat from the \"Chat Settings\" modal. 
+There, you can also adjust a couple of settings: AI difficulty and board size.
 <br>
 <br>
 You will actually be playing against 
 [js-chess-engine's](https://github.com/josefjadrny/js-chess-engine) bundled AI 
-and not against the LLM; and the LLM will sometimes say dumb things that do not reflect what is actually occurring on the board. The stage manages the game state and makes moves, 
-and the bot is informed what has happened so it can respond as though they made that move, but sometimes, it can't help but supplement its own garbage.
-<br>
-<br>
-I don't yet have any personal bots that I want to attach this to as an example, but you can add it to any chat from the \"chat settings\" modal.
+and not against the LLM; the LLM will sometimes say dumb things that do not reflect what is actually occurring on the board. The stage manages the game state and makes moves, 
+and the bot is informed what has happened so it can try to respond as though they made that move, but sometimes, it can't help but supplement its own garbage.
 "
 
 # 'PUBLIC', 'PRIVATE', or 'UNLISTED'.
