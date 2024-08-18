@@ -154,11 +154,13 @@ export class Stage extends StageBase<InitStateType, ChatStateType, MessageStateT
                     }
                 } else {
                     coordinates["end"] = matches[0].toUpperCase();
-                    let possibleStarts = Object.keys(possibleMoves).filter(key => moves[key].includes(coordinates["end"]));
+                    let possibleStarts = Object.keys(possibleMoves).filter(key => possibleMoves[key].includes(coordinates["end"]));
                     if (possibleStarts.length == 1) {
                         coordinates["start"] = possibleStarts[0];
                     } else if (possibleStarts.length > 1) {
-                        aiNote = `{{user}} has not yet made a move; {{char}} may choose to banter with {{user}}, but it remains {{user}}'s turn in this response.`;
+                        aiNote = `{{user}} gave a destination coordinate but multiple pieces could move there: ` +
+                                `${Object.values(possibleStarts).map(coord => PIECE_NAME_MAPPING[this.gameState.pieces[coord]]).join(',')}.\n` +
+                                `{{char}} may choose to tease {{user}}, but it remains {{user}}'s turn in this response.`;
                     } else {
                         aiNote = `{{user}} has not yet made a move; {{char}} may choose to banter with {{user}}, but it remains {{user}}'s turn in this response.`;
                     }
