@@ -11,18 +11,22 @@ creator_notes: "I don't even like chess. But for all you sickos out there who do
 well, I'd rather you indulged here than out in the real world.
 <br>
 <br>
-This stage will allow you to play chess with any bot by saying \"play chess,\" 
-or forfeit with \"knock over the board.\" The player is always white.
+This stage allows you to play chess with any bot by saying \"play chess.\" You will play white and input moves in a coordinate to coordinate (e.g., \"A2 to A4\") format. 
+The stage does not understand natural language or algebraic notation (although you can work coordinates into your RP and still have them work). 
+You may also forfeit with \"knock over the board,\" if you tire of the game.
 <br>
 <br>
-Of course, you'll actually be playing against 
+You will actually be playing against 
 [js-chess-engine's](https://github.com/josefjadrny/js-chess-engine) bundled AI 
-and not against the LLM. The stage will manage the game state and make moves, 
-and the bot will be informed what has happened so it can respond as though they made that move.
+and not against the LLM; and the LLM will sometimes say dumb things that do not reflect what is actually occurring on the board. The stage manages the game state and makes moves, 
+and the bot is informed what has happened so it can respond as though they made that move, but sometimes, it can't help but supplement its own garbage.
+<br>
+<br>
+I've really hardly tested this, and I don't have any bots I want to attach it to as an example bot, but you can add it to any chat from the \"chat settings\" modal.
 "
 
 # 'PUBLIC', 'PRIVATE', or 'UNLISTED'.
-visibility: 'PRIVATE'
+visibility: 'PUBLIC'
 
 # 'ADJACENT' | 'NONE' | 'COVER' | 'FULLSCREEN'
 # 'ADJACENT' is default. The frame will display on the side of the
