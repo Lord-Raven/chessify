@@ -12,8 +12,11 @@ well, I'd rather you indulged here than out in the real world.
 <br>
 <br>
 This stage allows you to play chess with any bot by saying \"play chess.\" You will play white and input moves in a coordinate to coordinate (e.g., \"A2 to A4\") format. 
-The stage does not understand natural language or algebraic notation (although you can work coordinates into your RP and still have them work). 
+The stage does not understand natural language or algebraic notation (although coordinates and other key words can be embedded in your RP and still function). 
 You may also forfeit with \"knock over the board,\" if you tire of the game.
+<br>
+<br>
+You can use the stage's settings to tweak AI difficulty or board scaling.
 <br>
 <br>
 You will actually be playing against 
@@ -22,7 +25,7 @@ and not against the LLM; and the LLM will sometimes say dumb things that do not 
 and the bot is informed what has happened so it can respond as though they made that move, but sometimes, it can't help but supplement its own garbage.
 <br>
 <br>
-I've really hardly tested this, and I don't have any bots I want to attach it to as an example bot, but you can add it to any chat from the \"chat settings\" modal.
+I don't yet have any personal bots that I want to attach this to as an example, but you can add it to any chat from the \"chat settings\" modal.
 "
 
 # 'PUBLIC', 'PRIVATE', or 'UNLISTED'.
@@ -57,6 +60,12 @@ config_schema:
       default: 2
       min: 0
       max: 3
+    boardScale:
+      title: 'Board Scale'
+      type: integer
+      default: 75
+      min: 50
+      max: 100
 
 # The schema of the state that you store.
 # This isn't needed even if you do store state,

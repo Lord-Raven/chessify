@@ -53,6 +53,7 @@ export class Stage extends StageBase<InitStateType, ChatStateType, MessageStateT
     characters: {[key: string]: Character};
     user: User;
     aiLevel: number = 2;
+    boardScale: number = 75;
     takenBlacks: string = '';
     takenWhites: string = '';
 
@@ -73,6 +74,9 @@ export class Stage extends StageBase<InitStateType, ChatStateType, MessageStateT
         this.loadMessageState(messageState);
         if (config.aiLevel) {
             this.aiLevel = config.aiLevel;
+        }
+        if (config.boardScale) {
+            this.boardScale = config.boardScale;
         }
     }
 
@@ -282,7 +286,7 @@ export class Stage extends StageBase<InitStateType, ChatStateType, MessageStateT
         fen = fen.substring(0, fen.indexOf(' '));
         let result = `---\n`;
         let lines = fen.split('/');
-        result += `<style>.play-area {width: 80%; padding-bottom: 60%; border: 5px solid darkslategray; border-radius: 5px; position: relative; display: table;}.chessboard {width: 75%; height: 100%; position: absolute; top: 0; left: 0; background: darkslategray}.row{width: 100%; height: 12.5%; display: flex;}.space-0 {width: 12.5%; height: 100%; display: flex; font-family: monospace; background: slategray; fill: #333;}.space-1 {width: 12.5%; height: 100%; display: flex; font-family: monospace; background: #333; fill: slategray;}.white-piece{ fill: #fff;} .black-piece{ fill: #000;}.discard {width: 25%; height: 100%; position: absolute; float: right; top: 0; right: 0;  background: darkslategray}.discard-black{width: 100%; height: 50%; display: flex;}.discard-white{width: 100%; height: 50%; display: flex}.discard-space {width: 25%; display: flex; font-family: monospace;}</style>`;
+        result += `<style>.play-area {width: ${this.boardScale}%; padding-bottom: ${this.boardScale * 0.75}%; border: 5px solid darkslategray; border-radius: 5px; position: relative; display: table;}.chessboard {width: 75%; height: 100%; position: absolute; top: 0; left: 0; background: darkslategray}.row{width: 100%; height: 12.5%; display: flex;}.space-0 {width: 12.5%; height: 100%; display: flex; font-family: monospace; background: slategray; fill: #333;}.space-1 {width: 12.5%; height: 100%; display: flex; font-family: monospace; background: #333; fill: slategray;}.white-piece{ fill: #fff;} .black-piece{ fill: #000;}.discard {width: 25%; height: 100%; position: absolute; float: right; top: 0; right: 0;  background: darkslategray}.discard-black{width: 100%; height: 50%; display: flex;}.discard-white{width: 100%; height: 50%; display: flex}.discard-space {width: 25%; display: flex; font-family: monospace;}</style>`;
         result += `<div class='play-area'><div class='chessboard'>`;
         for (let index = 0; index < lines.length; index++) {
             result += this.buildRow(lines[index], index + 1);
