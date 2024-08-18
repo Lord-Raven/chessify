@@ -129,6 +129,10 @@ export class Stage extends StageBase<InitStateType, ChatStateType, MessageStateT
                 this.gameState = new Game().exportJson();
                 aiNote = `{{user}} has started a chess game, and {{char}} will play along as they set up the board. They aren't playing yet`;
             }
+        } else if (['knock the board', 'throw the board', 'spill the pieces', 'knock over the board', 'bump the board'].filter(phrase => content.toLowerCase().indexOf(phrase) > -1).length > 0) {
+            aiNote = `{{user}} has messed up the board; {{char}} will consider this as {{user}} forfeiting--therefore, losing the game.`;
+            this.losses++;
+            this.gameState = null;
         } else {
             // Playing chess; Check for player's move.
             const matches = content.match(MOVE_REGEX);
