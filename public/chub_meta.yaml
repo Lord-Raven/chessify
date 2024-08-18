@@ -17,13 +17,15 @@ You may also forfeit with \"knock over the board,\" if you tire of the game.
 <br>
 <br>
 I don't yet have any personal bots that I want to attach this to as an example, but you can add it to any chat from the \"Chat Settings\" modal. 
-There, you can also adjust a couple of settings: AI difficulty and board size.
+There, you can also adjust a couple of settings: AI difficulty and board size (note that these require you to refresh the page before taking effect).
 <br>
 <br>
 You will actually be playing against 
 [js-chess-engine's](https://github.com/josefjadrny/js-chess-engine) bundled AI 
-and not against the LLM; the LLM will sometimes say dumb things that do not reflect what is actually occurring on the board. The stage manages the game state and makes moves, 
-and the bot is informed what has happened so it can try to respond as though they made that move, but sometimes, it can't help but supplement its own garbage.
+and not against the LLM; even with the stage spoon-feeding the LLM a FEN diagram and notes about what is going on, 
+it will sometimes say dumb things that do not reflect what is actually occurring on the board. 
+In reality, the stage manages the game state and makes moves, 
+and the bot is simply informed what is happening so it can try to respond as though it made that move.
 "
 
 # 'PUBLIC', 'PRIVATE', or 'UNLISTED'.
