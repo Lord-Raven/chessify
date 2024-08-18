@@ -296,15 +296,16 @@ export class Stage extends StageBase<InitStateType, ChatStateType, MessageStateT
         let colNum = 1;
         for(let index = 0; index < contents.length; index++) {
             const charAt = contents.charAt(index);
-            const coords = `${String.fromCharCode('A'.charCodeAt(0) + colNum - 1)}${8 - rowNum + 1}`;
 
             switch (true) {
                 case /[bknpqrBKNPQR]/.test(charAt):
+                    const coords = `${String.fromCharCode('A'.charCodeAt(0) + colNum - 1)}${8 - rowNum + 1}`;
                     result += this.addSpace(`${PIECE_MAPPING[charAt]}`, coords, `space-${(rowNum + colNum) % 2}`);
                     colNum++;
                     break;
                 case /\d/.test(charAt):
                     for (let i = 0; i < Number(charAt); i++) {
+                        const coords = `${String.fromCharCode('A'.charCodeAt(0) + colNum - 1)}${8 - rowNum + 1}`;
                         result += this.addSpace(` `, coords, `space-${(rowNum + colNum) % 2}`);
                         colNum++;
                     }
