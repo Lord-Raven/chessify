@@ -296,7 +296,7 @@ export class Stage extends StageBase<InitStateType, ChatStateType, MessageStateT
         let colNum = 1;
         for(let index = 0; index < contents.length; index++) {
             const charAt = contents.charAt(index);
-            const coords = `${String.fromCharCode('A'.charCodeAt(0) + index)}${8 - rowNum + 1}`;
+            const coords = `${String.fromCharCode('A'.charCodeAt(0) + colNum - 1)}${8 - rowNum + 1}`;
 
             switch (true) {
                 case /[bknpqrBKNPQR]/.test(charAt):
@@ -317,7 +317,7 @@ export class Stage extends StageBase<InitStateType, ChatStateType, MessageStateT
     }
 
     addSpace(char: string, coords: string, type: string): string {
-        return `<div class='${type}'><svg style='width: 100%; height: 100%;' viewBox='0 0 20 20'><text x='0.2' y='18.6' style='font: italic 3px sans-serif;'>${coords}</text><text x='2' y='16.5'>${char}</text></svg></div>`;
+        return `<div class='${type}'><svg style='width: 100%; height: 100%;' viewBox='0 0 20 20'><text x='0.3' y='18.7' style='font: italic 3px sans-serif;'>${coords}</text><text x='2' y='16.5'>${char}</text></svg></div>`;
     }
 
     buildDiscard(): string {
