@@ -140,8 +140,6 @@ export class Stage extends StageBase<InitStateType, ChatStateType, MessageStateT
         } else {
             // Playing chess; Check for player's move.
             const matches = content.match(MOVE_REGEX);
-            console.log(matches);
-            console.log(matches ? matches["0"] : '');
 
             if (matches && matches.length > 0) {
                 let coordinates: { [key: string]: string } = {};
@@ -197,7 +195,6 @@ export class Stage extends StageBase<InitStateType, ChatStateType, MessageStateT
                         const charMove = aiMove(this.gameState, this.aiLevel ?? 2);
                         aiNote = `${aiNote}\nThen, ${this.describeMove(Object.keys(charMove)[0], charMove[Object.keys(charMove)[0]], "{{char}}", this.gameState)}`;
                         this.gameState = move(this.gameState, Object.keys(charMove)[0], charMove[Object.keys(charMove)[0]]);
-                        console.log(aiNote);
 
                         // Calculate captured pieces:
                         this.takenBlacks = 'kqrrbbnnpppppppp';
@@ -225,9 +222,9 @@ export class Stage extends StageBase<InitStateType, ChatStateType, MessageStateT
                             }
                         }
                     }
-                } else {
-                    console.log('Player did not input a legal move.');
-                }
+                } //else {
+                //    console.log('Player did not input a legal move.');
+                //}
             } else {
                 aiNote = `{{user}} didn't make a move this turn. {{char}} should spend some time chatting, bantering, or antagonizing them, but it will remain {{user}}'s turn.`;
             }
@@ -236,6 +233,7 @@ export class Stage extends StageBase<InitStateType, ChatStateType, MessageStateT
         }
         if (aiNote.trim() != '') {
             aiNote = this.replaceTags(`[RESPONSE GUIDE]${aiNote}[/RESPONSE GUIDE]`, {"user": this.user.name, "char": promptForId ? this.characters[promptForId].name : ''});
+            console.log(aiNote);
         } else {
             aiNote = null;
         }
