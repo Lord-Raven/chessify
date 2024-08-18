@@ -226,10 +226,10 @@ export class Stage extends StageBase<InitStateType, ChatStateType, MessageStateT
                 aiNote = `{{user}} didn't make a move this turn. {{char}} should spend some time chatting, bantering, or antagonizing them, but it will remain {{user}}'s turn.`;
             }
             aiNote = `{{char}} and {{user}} are playing chess; ${(this.wins + this.losses + this.draws > 0) ? `{{user}} has a record of ${this.wins}-${this.losses}-${this.draws} against {{char}}` : `this is their first game together`}.\n` +
-                        `${aiNote}\nWrite a response which focuses upon recent moves and {{char}}'s reactions to the current state of play. The game is waiting for {{user}}'s next move, which will happen later. For internal reference, here is the board's current FEN: ${getFen(this.gameState)}`;
+                        `${aiNote}\nThis response should focus upon recent moves, {{char}}'s banter, and {{char}}'s reactions to the current state of the board. The game is waiting for {{user}}'s next move, which will happen later. For internal reference, here is the board's current FEN: ${getFen(this.gameState)}`;
         }
         if (aiNote.trim() != '') {
-            aiNote = this.replaceTags(`[RESPONSE NOTES]${aiNote}[/RESPONSE NOTES]`, {"user": this.user.name, "char": promptForId ? this.characters[promptForId].name : ''});
+            aiNote = this.replaceTags(`[RESPONSE GUIDE]${aiNote}[/RESPONSE GUIDE]`, {"user": this.user.name, "char": promptForId ? this.characters[promptForId].name : ''});
         } else {
             aiNote = null;
         }
