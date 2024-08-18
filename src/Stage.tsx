@@ -63,18 +63,11 @@ export class Stage extends StageBase<InitStateType, ChatStateType, MessageStateT
 
         this.characters = characters;
         this.user = users[Object.keys(users)[0]];
-        if (messageState != null) {
-            this.gameState = JSON.parse(messageState.gameState);
-            console.log(this.gameState);
-        }
+        this.loadMessageState(messageState);
     }
 
     async load(): Promise<Partial<LoadResponse<InitStateType, ChatStateType, MessageStateType>>> {
 
-        if (!this.gameState) {
-            this.gameState = new Game().exportJson();
-            console.log(this.gameState);
-        }
         return {
             success: true,
             error: null,
@@ -84,10 +77,17 @@ export class Stage extends StageBase<InitStateType, ChatStateType, MessageStateT
     }
 
     async setState(state: MessageStateType): Promise<void> {
+        this.loadMessageState(state);
+    }
 
-        if (state != null) {
-            this.gameState = JSON.parse(state.gameState);
-            console.log(this.gameState);
+    loadMessageState(messageState: MessageStateType) {
+        if (messageState != null) {
+            if (messageState.gameState) {
+                this.gameState = JSON.parse(messageState.gameState);
+                console.log(this.gameState);
+            } else {
+                this.gameState = null;
+            }
         }
     }
 
@@ -98,75 +98,92 @@ export class Stage extends StageBase<InitStateType, ChatStateType, MessageStateT
             promptForId
         } = userMessage;
 
-        // Check for player's move.
-        const matches = content.match(MOVE_REGEX);
-        console.log(matches);
-        console.log(matches ? matches["0"] : '');
-        let aiNote = '';
+        let aiNote: string|null  = '';
 
-        if (matches && matches.length > 0) {
-            let coordinates: {[key: string]: string} = {};
-            const possibleMoves = moves(this.gameState);
-            if (matches.length > 1) {
-                coordinates["start"] = matches[0].toUpperCase();
-                coordinates["end"] = matches[1].toUpperCase();
-                if (!possibleMoves[coordinates["start"]] || !possibleMoves[coordinates["start"]].includes(coordinates["end"])) {
-                    aiNote = `{{user}} tried to specify an invalid move. {{char}} may choose to tease or taunt them, but it remains {{user}}'s turn.`;
-                }
-            } else {
-                coordinates["end"] = matches[0].toUpperCase();
-                let possibleStarts = Object.keys(possibleMoves).filter(key => moves[key].includes(coordinates["end"]));
-                if (possibleStarts.length == 1) {
-                    coordinates["start"] = possibleStarts[0];
-                } else if (possibleStarts.length > 1) {
-                    aiNote = `{{user}} tried to specify only an ending position, but multiple pieces could make that move. {{char}} may choose to tease or taunt them, but it remains {{user}}'s turn.`;
-                } else {
-                    aiNote = `{{user}} tried to specify an ending position that no piece can move to. {{char}} may choose to tease or taunt them, but it remains {{user}}'s turn.`;
-                }
-            }
-
-            if (aiNote == '') {
-                // Must be a valid move; make it so.
-                aiNote = `${this.describeMove(coordinates["start"], coordinates["end"], "{{user}}", this.gameState)}`;
-                this.gameState = move(this.gameState, coordinates["start"], coordinates["end"]);
-
-                //visualState = this.buildBoard();
-                console.log(this.gameState);
-
-                // TODO: A big flaw of both turns occurring here is that the AI never sees the intermediate FEN and has limited insight into what the user's move accomplished; consider attempting to summarize for them.
-
-                // Then, make an AI move:
-                const charMove = aiMove(this.gameState, 2);
-                aiNote = `${aiNote}\nThen, ${this.describeMove(Object.keys(charMove)[0], charMove[Object.keys(charMove)[0]], "{{char}}", this.gameState)}`;
-                this.gameState = move(this.gameState, Object.keys(charMove)[0], charMove[Object.keys(charMove)[0]]);
-                console.log(aiNote);
-
-                // Calculate captured pieces:
-                this.takenBlacks = 'kqrrbbnnpppppppp';
-                this.takenWhites = 'KQRRBBNNPPPPPPPP';
-                const pieces: string[] = Object.values(this.gameState.pieces);
-                pieces.forEach(piece => {
-                    const blackIndex = this.takenBlacks.indexOf(piece);
-                    if (blackIndex > -1) {
-                        this.takenBlacks = this.takenBlacks.slice(0, blackIndex) + this.takenBlacks.slice(blackIndex + 1);
-                    }
-                    const whiteIndex = this.takenWhites.indexOf(piece);
-                    if (whiteIndex > -1) {
-                        this.takenWhites = this.takenWhites.slice(0, whiteIndex) + this.takenWhites.slice(whiteIndex + 1);
-                    }
-                });
-            } else {
-                console.log('Player did not input a legal move.');
+        if (this.gameState == null) {
+            if (content.toLowerCase().indexOf('play chess')) {
+                // Start a game of chess!
+                this.gameState = new Game().exportJson();
+                aiNote = `{{user}} has started a chess game, and {{char}} will play along as they set up the board. They aren't playing yet`;
             }
         } else {
-            aiNote = `{{user}} didn't make a move this turn. {{char}} should spend some time chatting, bantering, or antagonizing them, but it will remain {{user}}'s turn.`;
-        }
+            // Check for player's move.
+            const matches = content.match(MOVE_REGEX);
+            console.log(matches);
+            console.log(matches ? matches["0"] : '');
 
+            if (matches && matches.length > 0) {
+                let coordinates: { [key: string]: string } = {};
+                const possibleMoves = moves(this.gameState);
+                if (matches.length > 1) {
+                    coordinates["start"] = matches[0].toUpperCase();
+                    coordinates["end"] = matches[1].toUpperCase();
+                    if (!possibleMoves[coordinates["start"]] || !possibleMoves[coordinates["start"]].includes(coordinates["end"])) {
+                        aiNote = `{{user}} tried to specify an invalid move. {{char}} may choose to tease or taunt them, but it remains {{user}}'s turn.`;
+                    }
+                } else {
+                    coordinates["end"] = matches[0].toUpperCase();
+                    let possibleStarts = Object.keys(possibleMoves).filter(key => moves[key].includes(coordinates["end"]));
+                    if (possibleStarts.length == 1) {
+                        coordinates["start"] = possibleStarts[0];
+                    } else if (possibleStarts.length > 1) {
+                        aiNote = `{{user}} tried to specify only an ending position, but multiple pieces could make that move. {{char}} may choose to tease or taunt them, but it remains {{user}}'s turn.`;
+                    } else {
+                        aiNote = `{{user}} tried to specify an ending position that no piece can move to. {{char}} may choose to tease or taunt them, but it remains {{user}}'s turn.`;
+                    }
+                }
+
+                if (aiNote == '') {
+                    // Must be a valid move; make it so.
+                    aiNote = `${this.describeMove(coordinates["start"], coordinates["end"], "{{user}}", this.gameState)}`;
+                    this.gameState = move(this.gameState, coordinates["start"], coordinates["end"]);
+                    console.log(this.gameState);
+
+                    // Check for draw/checkmate
+                    //if (this.gameState.)
+
+                    // Check for check and add note.
+                    //
+
+
+                    // TODO: A big flaw of both turns occurring here is that the AI never sees the intermediate FEN and has limited insight into what the user's move accomplished; consider attempting to summarize for them.
+
+                    // Then, make an AI move:
+                    const charMove = aiMove(this.gameState, 2);
+                    aiNote = `${aiNote}\nThen, ${this.describeMove(Object.keys(charMove)[0], charMove[Object.keys(charMove)[0]], "{{char}}", this.gameState)}`;
+                    this.gameState = move(this.gameState, Object.keys(charMove)[0], charMove[Object.keys(charMove)[0]]);
+                    console.log(aiNote);
+
+                    // Calculate captured pieces:
+                    this.takenBlacks = 'kqrrbbnnpppppppp';
+                    this.takenWhites = 'KQRRBBNNPPPPPPPP';
+                    const pieces: string[] = Object.values(this.gameState.pieces);
+                    pieces.forEach(piece => {
+                        const blackIndex = this.takenBlacks.indexOf(piece);
+                        if (blackIndex > -1) {
+                            this.takenBlacks = this.takenBlacks.slice(0, blackIndex) + this.takenBlacks.slice(blackIndex + 1);
+                        }
+                        const whiteIndex = this.takenWhites.indexOf(piece);
+                        if (whiteIndex > -1) {
+                            this.takenWhites = this.takenWhites.slice(0, whiteIndex) + this.takenWhites.slice(whiteIndex + 1);
+                        }
+                    });
+                } else {
+                    console.log('Player did not input a legal move.');
+                }
+            } else {
+                aiNote = `{{user}} didn't make a move this turn. {{char}} should spend some time chatting, bantering, or antagonizing them, but it will remain {{user}}'s turn.`;
+            }
+            aiNote = `[{{char}} and {{user}} are playing chess. Write a response describing the most recent move, including {{char}}'s reactions. ${aiNote}\nThis is the only activity that has occurred, so focus on this, making remarks about these moves or the current state of the board. Additional moves will occur in future responses. Here is the board's FEN:\n${getFen(this.gameState)}]`;
+        }
+        if (aiNote.trim() != '') {
+            aiNote = this.replaceTags(aiNote, {"user": this.user.name, "char": promptForId ? this.characters[promptForId].name : ''});
+        } else {
+            aiNote = null;
+        }
         return {
-            stageDirections: this.replaceTags(
-                `[{{char}} and {{user}} are playing chess. Write a response describing the most recent move, including {{char}}'s reactions. ${aiNote}\nThis is the only activity that has occurred, so focus on this, making remarks about these moves or the current state of the board. Additional moves will occur in future responses. Here is the board's FEN:\n${getFen(this.gameState)}]`,
-                {"user": this.user.name, "char": promptForId ? this.characters[promptForId].name : ''}),
-            messageState: {gameState: JSON.stringify(this.gameState)},
+            stageDirections: aiNote,
+            messageState: {gameState: this.gameState ? JSON.stringify(this.gameState) : null},
             modifiedMessage: null,
             systemMessage: null,
             error: null,
@@ -178,10 +195,10 @@ export class Stage extends StageBase<InitStateType, ChatStateType, MessageStateT
 
         return {
             stageDirections: null,
-            messageState: {gameState: JSON.stringify(this.gameState)},
+            messageState: {gameState: this.gameState ? JSON.stringify(this.gameState) : null},
             modifiedMessage: null,
             error: null,
-            systemMessage: this.buildBoard(),
+            systemMessage: this.gameState ? this.buildBoard() : null,
             chatState: null
         };
     }
@@ -206,11 +223,11 @@ export class Stage extends StageBase<InitStateType, ChatStateType, MessageStateT
 
             switch (true) {
                 case /[bknpqrBKNPQR]/.test(charAt):
-                    result += this.addSpace(`${PIECE_MAPPING[charAt]}`, coords, `space-${(rowNum * 8 + index) % 2}`);
+                    result += this.addSpace(`${PIECE_MAPPING[charAt]}`, coords, `space-${(rowNum + index) % 2}`);
                     break;
                 case /\d/.test(charAt):
                     for (let i = 0; i < Number(charAt); i++) {
-                        result += this.addSpace(` `, coords, `space-${(rowNum * 8 + index) % 2}`);
+                        result += this.addSpace(` `, coords, `space-${(rowNum + index) % 2}`);
                     }
                     break;
                 default:
