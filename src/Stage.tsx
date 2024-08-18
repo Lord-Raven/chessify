@@ -127,7 +127,7 @@ export class Stage extends StageBase<InitStateType, ChatStateType, MessageStateT
             if (content.toLowerCase().indexOf('play chess') > -1) {
                 // Start a game of chess!
                 this.gameState = new Game().exportJson();
-                aiNote = `{{user}} wants to play chess, and {{char}} will play along as they set up the board. The game hasn't started yet, though.`;
+                aiNote = `{{user}} wants to play chess, and {{char}} will play along as they set up the board. Point out that {{user}} will be playing white. The game hasn't started yet, though.`;
             }
         } else if (['knock the board', 'throw the board', 'spill the pieces', 'knock over the board', 'bump the board'].filter(phrase => content.toLowerCase().indexOf(phrase) > -1).length > 0) {
             aiNote = `{{user}} has messed up the board; {{char}} will consider this as {{user}} forfeiting--therefore, losing the game.`;
@@ -226,7 +226,7 @@ export class Stage extends StageBase<InitStateType, ChatStateType, MessageStateT
                 aiNote = `{{user}} didn't make a move this turn. {{char}} should spend some time chatting, bantering, or antagonizing them, but it will remain {{user}}'s turn.`;
             }
             aiNote = `{{char}} and {{user}} are playing chess; ${(this.wins + this.losses + this.draws > 0) ? `{{user}} has a record of ${this.wins}-${this.losses}-${this.draws} against {{char}}` : `this is their first game together`}.\n` +
-                        `${aiNote}\nWrite a response focusing upon the most recent moves, including {{char}}'s reactions to {{user}}'s move and the current state of play. Additional moves must wait for future responses. For internal reference, here is the board's current FEN: ${getFen(this.gameState)}`;
+                        `${aiNote}\nWrite a response which focuses upon recent moves and {{char}}'s reactions to the current state of play. The game is waiting for {{user}}'s next move, which will happen later. For internal reference, here is the board's current FEN: ${getFen(this.gameState)}`;
         }
         if (aiNote.trim() != '') {
             aiNote = this.replaceTags(`[RESPONSE NOTES]${aiNote}[/RESPONSE NOTES]`, {"user": this.user.name, "char": promptForId ? this.characters[promptForId].name : ''});

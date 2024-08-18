@@ -12,7 +12,7 @@ well, I'd rather you indulged here than out in the real world.
 <br>
 <br>
 This stage will allow you to play chess with any bot by saying \"play chess,\" 
-or forfeit with \"knock over the board.\"
+or forfeit with \"knock over the board.\" The player is always white.
 <br>
 <br>
 Of course, you'll actually be playing against 
@@ -22,7 +22,7 @@ and the bot will be informed what has happened so it can respond as though they 
 "
 
 # 'PUBLIC', 'PRIVATE', or 'UNLISTED'.
-visibility: 'UNLISTED'
+visibility: 'PRIVATE'
 
 # 'ADJACENT' | 'NONE' | 'COVER' | 'FULLSCREEN'
 # 'ADJACENT' is default. The frame will display on the side of the
