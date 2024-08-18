@@ -8,10 +8,10 @@ project_name: "Chessify"
 tagline: "It's right outside your door, now..."
 
 creator_notes: "I don't even like chess. But for all you sickos out there who do, 
-know that I will always defend your right to play it.
+well, I'd rather you indulged here than out in the real world.
 <br>
 <br>
-This stage will allow you to play chess with a bot. 
+This stage will allow you to play chess with any bot. 
 Of course, you'll actually be playing against 
 [js-chess-engine](https://github.com/josefjadrny/js-chess-engine)'s bundled AI 
 and not against the LLM. The stage will manage the game state and make moves, 
@@ -32,21 +32,24 @@ visibility: 'UNLISTED'
 position: 'NONE'
 
 # Self-explanatory.
-# tags:
-#  - 'Stage'
-#  - 'Admin'
-#  - 'Template'
-#  - 'Base'
+tags:
+ - 'Stage'
+ - 'Add-on'
+ - 'Chess'
 
 # The schema of any user-supplied config.
 # If your stage requires a configuration but has no
 #   defined schema, it won't work.
 config_schema:
+  title: 'Chessify Settings'
   type: object
   properties:
-    health:
+    aiLevel:
+      title: 'AI Level'
       type: integer
-      default: 100
+      default: 2
+      min: 0
+      max: 3
 
 # The schema of the state that you store.
 # This isn't needed even if you do store state,
