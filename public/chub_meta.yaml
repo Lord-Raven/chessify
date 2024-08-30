@@ -17,7 +17,7 @@ You may also forfeit with \"knock over the board,\" if you tire of the game.
 <br>
 <br>
 I don't yet have any personal bots that I want to attach this to as an example, but you can add it to any chat from the \"Chat Settings\" modal. 
-There, you can also adjust a couple of settings: AI difficulty and board size (note that these require you to refresh the page before taking effect).
+There, you can also adjust a couple of settings: AI difficulty and board scale (note that these require you to refresh the chat before taking effect).
 <br>
 <br>
 You will actually be playing against 
@@ -25,7 +25,11 @@ You will actually be playing against
 and not against the LLM; even with the stage spoon-feeding the LLM a FEN diagram and notes about what is going on, 
 it will sometimes say dumb things that do not reflect what is actually occurring on the board. 
 In reality, the stage manages the game state and makes moves, 
-and the bot is simply informed what is happening so it can try to respond as though it made that move.
+and the bot is simply informed what is happening so it can try to respond as though it made that move. The bot can suck at this, 
+especially if it is compelled to type a lot, but sometimes the responses are surprisingly good and demonstrate that the LLM does have some reasonable chess knowledge in there.
+<br>
+<br>
+This stage does put a gross amount of CSS into every system message, to format the chess board. Maybe if I can't sleep at night, I'll work out a way to avoid this.
 "
 
 # 'PUBLIC', 'PRIVATE', or 'UNLISTED'.
