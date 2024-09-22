@@ -14,18 +14,18 @@ type ChatStateType = any;
 const MOVE_REGEX = /([a-hA-H][1-8])/gm
 
 const PIECE_MAPPING: {[key: string]: string} = {
-    "K": `<tspan class='white-piece'>\u265A</tspan>`, //'\u2654',
-    "Q": `<tspan class='white-piece'>\u265B</tspan>`, //'\u2655',
-    "R": `<tspan class='white-piece'>\u265C</tspan>`, //'\u2656',
-    "B": `<tspan class='white-piece'>\u265D</tspan>`, //'\u2657',
-    "N": `<tspan class='white-piece'>\u265E</tspan>`, //'\u2658',
-    "P": `<tspan class='white-piece'>\u265F</tspan>`, //'\u2659',
-    "k": `<tspan class='black-piece'>\u265A</tspan>`,
-    "q": `<tspan class='black-piece'>\u265B</tspan>`,
-    "r": `<tspan class='black-piece'>\u265C</tspan>`,
-    "b": `<tspan class='black-piece'>\u265D</tspan>`,
-    "n": `<tspan class='black-piece'>\u265E</tspan>`,
-    "p": `<tspan class='black-piece'>\u265F</tspan>`
+    "K": `<tspan style="fill: #fff;">\u265A</tspan>`, //'\u2654',
+    "Q": `<tspan style="fill: #fff;">\u265B</tspan>`, //'\u2655',
+    "R": `<tspan style="fill: #fff;">\u265C</tspan>`, //'\u2656',
+    "B": `<tspan style="fill: #fff;">\u265D</tspan>`, //'\u2657',
+    "N": `<tspan style="fill: #fff;">\u265E</tspan>`, //'\u2658',
+    "P": `<tspan style="fill: #fff;">\u265F</tspan>`, //'\u2659',
+    "k": `<tspan style="fill: #000;">\u265A</tspan>`,
+    "q": `<tspan style="fill: #000;">\u265B</tspan>`,
+    "r": `<tspan style="fill: #000;">\u265C</tspan>`,
+    "b": `<tspan style="fill: #000;">\u265D</tspan>`,
+    "n": `<tspan style="fill: #000;">\u265E</tspan>`,
+    "p": `<tspan style="fill: #000;">\u265F</tspan>`
 }
 const PIECE_NAME_MAPPING: {[key: string]: string} = {
     "K": 'the white king',
@@ -282,8 +282,7 @@ export class Stage extends StageBase<InitStateType, ChatStateType, MessageStateT
         fen = fen.substring(0, fen.indexOf(' '));
         let result = `---\n`;
         let lines = fen.split('/');
-        result += `<style>.play-area {width: ${this.boardScale}%; padding-bottom: ${this.boardScale * 0.75}%; border: 5px solid darkslategray; border-radius: 5px; position: relative; display: table;}.chessboard {width: 75%; height: 100%; position: absolute; top: 0; left: 0; background: darkslategray}.row{width: 100%; height: 12.5%; display: flex;}.space-0 {width: 12.5%; height: 100%; display: flex; font-family: monospace; background: slategray; fill: #333;}.space-1 {width: 12.5%; height: 100%; display: flex; font-family: monospace; background: #333; fill: slategray;}.white-piece{ fill: #fff;} .black-piece{ fill: #000;}.discard {width: 25%; height: 100%; position: absolute; float: right; top: 0; right: 0;  background: darkslategray}.discard-black{width: 100%; height: 50%; display: flex;}.discard-white{width: 100%; height: 50%; display: flex}.discard-space {width: 25%; display: flex; font-family: monospace;}</style>`;
-        result += `<div class='play-area'><div class='chessboard'>`;
+        result += `<div style="width: ${this.boardScale}%; padding-bottom: ${this.boardScale * 0.75}%; border: 5px solid darkslategray; border-radius: 5px; position: relative; display: table;"><div style="width: 75%; height: 100%; position: absolute; top: 0; left: 0; background: darkslategray">`;
         for (let index = 0; index < lines.length; index++) {
             result += this.buildRow(lines[index], index + 1);
         }
@@ -292,7 +291,7 @@ export class Stage extends StageBase<InitStateType, ChatStateType, MessageStateT
     }
 
     buildRow(contents: string, rowNum: number): string {
-        let result = `<div class='row'>`;
+        let result = `<div style="width: 100%; height: 12.5%; display: flex;">`;
         let colNum = 1;
         for(let index = 0; index < contents.length; index++) {
             const charAt = contents.charAt(index);
@@ -306,7 +305,10 @@ export class Stage extends StageBase<InitStateType, ChatStateType, MessageStateT
                 case /\d/.test(charAt):
                     for (let i = 0; i < Number(charAt); i++) {
                         const coords = `${String.fromCharCode('A'.charCodeAt(0) + colNum - 1)}${8 - rowNum + 1}`;
-                        result += this.addSpace(` `, coords, `space-${(rowNum + colNum) % 2}`);
+                        const style = ((rowNum + colNum) % 2) == 0 ?
+                            "width: 12.5%; height: 100%; display: flex; font-family: monospace; background: slategray; fill: #333;" :
+                            "width: 12.5%; height: 100%; display: flex; font-family: monospace; background: #333; fill: slategray;"
+                        result += this.addSpace(` `, coords, style);
                         colNum++;
                     }
                     break;
@@ -317,18 +319,18 @@ export class Stage extends StageBase<InitStateType, ChatStateType, MessageStateT
         return result;
     }
 
-    addSpace(char: string, coords: string, type: string): string {
-        return `<div class='${type}'><svg style='width: 100%; height: 100%;' viewBox='0 0 20 20'><text x='0.3' y='18.8' style='font: italic 3px sans-serif;'>${coords}</text><text x='2' y='16.5'>${char}</text></svg></div>`;
+    addSpace(char: string, coords: string, style: string): string {
+        return `<div style="${style}"><svg style='width: 100%; height: 100%;' viewBox='0 0 20 20'><text x='0.3' y='18.8' style='font: italic 3px sans-serif;'>${coords}</text><text x='2' y='16.5'>${char}</text></svg></div>`;
     }
 
     buildDiscard(): string {
-        let result = `<div class='discard'><div class='discard-black'>`;
+        let result = `<div style="width: 25%; height: 100%; position: absolute; float: right; top: 0; right: 0;  background: darkslategray;"><div style="width: 100%; height: 50%; display: flex;">`;
         for (let index = 0; index < this.takenBlacks.length; index++) {
-            result += this.addSpace(`${PIECE_MAPPING[this.takenBlacks.charAt(index)]}`, '', 'discard-space');
+            result += this.addSpace(`${PIECE_MAPPING[this.takenBlacks.charAt(index)]}`, '', "width: 25%; display: flex; font-family: monospace;");
         }
-        result += `</div><div class='discard-white'>`
+        result += `</div><div style="width: 100%; height: 50%; display: flex;">`
         for (let index = 0; index < this.takenWhites.length; index++) {
-            result += this.addSpace(`${PIECE_MAPPING[this.takenWhites.charAt(index)]}`, '', 'discard-space');
+            result += this.addSpace(`${PIECE_MAPPING[this.takenWhites.charAt(index)]}`, '', "width: 25%; display: flex; font-family: monospace;");
         }
         result += `</div></div>`;
 
