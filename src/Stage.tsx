@@ -299,7 +299,10 @@ export class Stage extends StageBase<InitStateType, ChatStateType, MessageStateT
             switch (true) {
                 case /[bknpqrBKNPQR]/.test(charAt):
                     const coords = `${String.fromCharCode('A'.charCodeAt(0) + colNum - 1)}${8 - rowNum + 1}`;
-                    result += this.addSpace(`${PIECE_MAPPING[charAt]}`, coords, `space-${(rowNum + colNum) % 2}`);
+                    const style = ((rowNum + colNum) % 2) == 0 ?
+                        "width: 12.5%; height: 100%; display: flex; font-family: monospace; background: slategray; fill: #333;" :
+                        "width: 12.5%; height: 100%; display: flex; font-family: monospace; background: #333; fill: slategray;"
+                    result += this.addSpace(`${PIECE_MAPPING[charAt]}`, coords, style);
                     colNum++;
                     break;
                 case /\d/.test(charAt):
