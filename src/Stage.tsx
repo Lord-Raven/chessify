@@ -323,7 +323,7 @@ export class Stage extends StageBase<InitStateType, ChatStateType, MessageStateT
     }
 
     addSpace(char: string, coords: string, style: string): string {
-        return `<div style="${style}"><svg style='width: 100%; height: 100%;' viewBox='0 0 20 20'><text x='0.3' y='18.8' style='font: italic 3px sans-serif;'>${coords}</text><text x='2' y='16.5'>${char}</text></svg></div>`;
+        return `<div style="${style}"><svg viewBox='0 0 20 20' style='width: 100%; height: 100%;'><text x='0.3' y='18.8' style='font: italic 3px sans-serif;'>${coords}</text><text x='2' y='16.5'>${char}</text></svg></div>`;
     }
 
     buildDiscard(): string {
