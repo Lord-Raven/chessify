@@ -282,7 +282,7 @@ export class Stage extends StageBase<InitStateType, ChatStateType, MessageStateT
         fen = fen.substring(0, fen.indexOf(' '));
         let result = `---\n`;
         let lines = fen.split('/');
-        result += `<div style="width: ${this.boardScale}%; padding-bottom: ${this.boardScale * 0.75}%; border: 5px solid darkslategray; border-radius: 5px; position: relative; display: table;"><div style="width: 75%; height: 100%; position: absolute; top: 0; left: 0; background: darkslategray">`;
+        result += `<div style="width: ${this.boardScale}vw; padding-bottom: ${this.boardScale * 0.75}vw; border: 5px solid darkslategray; border-radius: 5px; position: relative; display: table;"><div style="width: 75%; height: 100%; position: absolute; top: 0; left: 0; background: darkslategray">`;
         for (let index = 0; index < lines.length; index++) {
             result += this.buildRow(lines[index], index + 1);
         }
@@ -300,8 +300,8 @@ export class Stage extends StageBase<InitStateType, ChatStateType, MessageStateT
                 case /[bknpqrBKNPQR]/.test(charAt):
                     const coords = `${String.fromCharCode('A'.charCodeAt(0) + colNum - 1)}${8 - rowNum + 1}`;
                     const style = ((rowNum + colNum) % 2) == 0 ?
-                        "width: 12.5%; height: 100%; display: flex; font-family: monospace; background: slategray; fill: #333;" :
-                        "width: 12.5%; height: 100%; display: flex; font-family: monospace; background: #333; fill: slategray;"
+                        "width: 12.5%; height: 100%; display: flex; position: relative; align-items: center; justify-content: center; font-family: monospace; background: slategray; fill: #333;" :
+                        "width: 12.5%; height: 100%; display: flex; position: relative; align-items: center; justify-content: center; font-family: monospace; background: #333; fill: slategray;"
                     result += this.addSpace(`${PIECE_MAPPING[charAt]}`, coords, style);
                     colNum++;
                     break;
@@ -309,8 +309,8 @@ export class Stage extends StageBase<InitStateType, ChatStateType, MessageStateT
                     for (let i = 0; i < Number(charAt); i++) {
                         const coords = `${String.fromCharCode('A'.charCodeAt(0) + colNum - 1)}${8 - rowNum + 1}`;
                         const style = ((rowNum + colNum) % 2) == 0 ?
-                            "width: 12.5%; height: 100%; display: flex; font-family: monospace; background: slategray; fill: #333;" :
-                            "width: 12.5%; height: 100%; display: flex; font-family: monospace; background: #333; fill: slategray;"
+                            "width: 12.5%; height: 100%; display: flex; position: relative; align-items: center; justify-content: center; font-family: monospace; background: slategray; fill: #333;" :
+                            "width: 12.5%; height: 100%; display: flex; position: relative; align-items: center; justify-content: center; font-family: monospace; background: #333; fill: slategray;"
                         result += this.addSpace(` `, coords, style);
                         colNum++;
                     }
@@ -324,17 +324,17 @@ export class Stage extends StageBase<InitStateType, ChatStateType, MessageStateT
 
     addSpace(char: string, coords: string, style: string): string {
         // return `<div style="${style}"><svg viewBox='0 0 20 20' style='width: 100%; height: 100%;'><text x='0.3' y='18.8' style='font: italic 3px sans-serif;'>${coords}</text><text x='2' y='16.5'>${char}</text></svg></div>`;
-        return `<div style="${style}"><div style='position: absolute; top: 2px; left: 2px; font-size: 0.3em; font-style: italic; color: slategray;'>${coords}</div><div style='font-size: 1.6em;'>${char}</div></div>`;
+        return `<div style="${style} position: relative;"><div style='position: absolute; top: 2px; left: 2px; font-size: 0.3em; font-style: italic; color: slategray;'>${coords}</div><div style='font-size: 2vw;'>${char}</div></div>`;
     }
 
     buildDiscard(): string {
         let result = `<div style="width: 25%; height: 100%; position: absolute; float: right; top: 0; right: 0;  background: darkslategray;"><div style="width: 100%; height: 50%; display: flex;">`;
         for (let index = 0; index < this.takenBlacks.length; index++) {
-            result += this.addSpace(`${PIECE_MAPPING[this.takenBlacks.charAt(index)]}`, '', "width: 25%; display: flex; font-family: monospace;");
+            result += this.addSpace(`${PIECE_MAPPING[this.takenBlacks.charAt(index)]}`, '', "width: 25%; display: flex; position: relative; align-items: center; justify-content: center; font-family: monospace;");
         }
         result += `</div><div style="width: 100%; height: 50%; display: flex;">`
         for (let index = 0; index < this.takenWhites.length; index++) {
-            result += this.addSpace(`${PIECE_MAPPING[this.takenWhites.charAt(index)]}`, '', "width: 25%; display: flex; font-family: monospace;");
+            result += this.addSpace(`${PIECE_MAPPING[this.takenWhites.charAt(index)]}`, '', "width: 25%; display: flex; position: relative; align-items: center; justify-content: center; font-family: monospace;");
         }
         result += `</div></div>`;
 
