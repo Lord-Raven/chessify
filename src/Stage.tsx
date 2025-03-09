@@ -20,7 +20,7 @@ const BUILD_PIECE = (index: number) => {
     const xPosition = (index % 4) * xPercent;
     const yPosition = (Math.floor(index / 4) * yPercent);
     console.log(`${xPercent}, ${yPercent}, ${xPosition}, ${yPosition}`);
-    const returnVal = `<div style="width: 100%; height: 100%; background-image: url('https://i.imgur.com/L1MLIuJ.png'); background-size: 400% 300%; background-position: ${xPosition}% ${yPosition}%;"></div>`;
+    const returnVal = `<div style="width: 100%; height: 100%; background-image: url('https://i.imgur.com/L1MLIuJ.png'); background-size: 400% 300%; background-position: ${xPosition}% ${yPosition}%; image-rendering: smooth;"></div>`;
     console.log(returnVal);
     return returnVal;
 }
@@ -315,8 +315,8 @@ export class Stage extends StageBase<InitStateType, ChatStateType, MessageStateT
                 case /[bknpqrBKNPQR]/.test(charAt):
                     const coords = `${String.fromCharCode('A'.charCodeAt(0) + colNum - 1)}${8 - rowNum + 1}`;
                     const style = ((rowNum + colNum) % 2) == 0 ?
-                        "width: 12.5%; height: 100%; display: flex; position: relative; align-items: center; justify-content: center; font-family: monospace; background: slategray; fill: #333;" :
-                        "width: 12.5%; height: 100%; display: flex; position: relative; align-items: center; justify-content: center; font-family: monospace; background: #333; fill: slategray;"
+                        "width: 12.5%; height: 100%; display: flex; position: relative; align-items: center; justify-content: center; font-family: monospace; background: slategray; color: #333;" :
+                        "width: 12.5%; height: 100%; display: flex; position: relative; align-items: center; justify-content: center; font-family: monospace; background: #333; color: slategray;"
                     result += this.addSpace(charAt, coords, style);
                     colNum++;
                     break;
@@ -324,8 +324,8 @@ export class Stage extends StageBase<InitStateType, ChatStateType, MessageStateT
                     for (let i = 0; i < Number(charAt); i++) {
                         const coords = `${String.fromCharCode('A'.charCodeAt(0) + colNum - 1)}${8 - rowNum + 1}`;
                         const style = ((rowNum + colNum) % 2) == 0 ?
-                            "width: 12.5%; height: 100%; display: flex; position: relative; align-items: center; justify-content: center; font-family: monospace; background: slategray; fill: #333;" :
-                            "width: 12.5%; height: 100%; display: flex; position: relative; align-items: center; justify-content: center; font-family: monospace; background: #333; fill: slategray;"
+                            "width: 12.5%; height: 100%; display: flex; position: relative; align-items: center; justify-content: center; font-family: monospace; background: slategray; color: #333;" :
+                            "width: 12.5%; height: 100%; display: flex; position: relative; align-items: center; justify-content: center; font-family: monospace; background: #333; color: slategray;"
                         result += this.addSpace(` `, coords, style);
                         colNum++;
                     }
@@ -339,7 +339,7 @@ export class Stage extends StageBase<InitStateType, ChatStateType, MessageStateT
 
     addSpace(char: string, coords: string, style: string): string {
         // return `<div style="${style}"><svg viewBox='0 0 20 20' style='width: 100%; height: 100%;'><text x='0.3' y='18.8' style='font: italic 3px sans-serif;'>${coords}</text><text x='2' y='16.5'>${char}</text></svg></div>`;
-        return `<div style="${style} position: relative;"><div style='position: absolute; top: 2px; left: 2px; font-size: 1em; font-style: italic;'>${coords}</div>${PIECE_IMAGE[char]}</div>`;
+        return `<div style="${style} position: relative;"><div style='position: absolute; top: 1px; left: 2px; font-size: 1em; font-style: italic;'>${coords}</div>${PIECE_IMAGE[char]}</div>`;
     }
 
     buildDiscard(): string {
