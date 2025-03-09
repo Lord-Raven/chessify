@@ -27,6 +27,32 @@ const PIECE_MAPPING: {[key: string]: string} = {
     "n": `<tspan style="fill: #000;">\u265E</tspan>`,
     "p": `<tspan style="fill: #000;">\u265F</tspan>`
 }
+
+//https://i.imgur.com/L1MLIuJ.png
+const BUILD_PIECE = (index: number) => {
+    const xPercent = 100 / 3;
+    const yPercent = 100 / 2;
+    const xPosition = (index % 4) * xPercent;
+    const yPosition = (Math.floor(index / 4) * yPercent);
+    return `<div style="width: 100%; height: 100%; background-image: url('https://i.imgur.com/L1MLIuJ.png'); background-size: 400% 300%; background-position: ${xPosition}% ${yPosition}%;"></div>`;
+}
+
+const PIECE_IMAGE: {[key: string]: string} = {
+    "K": BUILD_PIECE(0),
+    "Q": BUILD_PIECE(1),
+    "R": BUILD_PIECE(2),
+    "B": BUILD_PIECE(3),
+    "N": BUILD_PIECE(4),
+    "P": BUILD_PIECE(5),
+    "k": BUILD_PIECE(6),
+    "q": BUILD_PIECE(7),
+    "r": BUILD_PIECE(8),
+    "b": BUILD_PIECE(9),
+    "n": BUILD_PIECE(10),
+    "p": BUILD_PIECE(11),
+    " ": ''
+}
+
 const PIECE_NAME_MAPPING: {[key: string]: string} = {
     "K": 'the white king',
     "Q": 'the white queen',
@@ -41,6 +67,7 @@ const PIECE_NAME_MAPPING: {[key: string]: string} = {
     "n": 'a black knight',
     "p": 'a black pawn'
 }
+
 export class Stage extends StageBase<InitStateType, ChatStateType, MessageStateType, ConfigType> {
 
     // Saved:
@@ -282,7 +309,7 @@ export class Stage extends StageBase<InitStateType, ChatStateType, MessageStateT
         fen = fen.substring(0, fen.indexOf(' '));
         let result = `---\n`;
         let lines = fen.split('/');
-        result += `<div style="width: ${this.boardScale}vw; padding-bottom: ${this.boardScale * 0.75}vw; border: 5px solid darkslategray; border-radius: 5px; position: relative; display: table;"><div style="width: 75%; height: 100%; position: absolute; top: 0; left: 0; background: darkslategray">`;
+        result += `<div style="width: ${this.boardScale}%; padding-bottom: ${this.boardScale * 0.75}%; border: 5px solid darkslategray; border-radius: 5px; position: relative; display: table;"><div style="width: 75%; height: 100%; position: absolute; top: 0; left: 0; background: darkslategray">`;
         for (let index = 0; index < lines.length; index++) {
             result += this.buildRow(lines[index], index + 1);
         }
@@ -324,7 +351,7 @@ export class Stage extends StageBase<InitStateType, ChatStateType, MessageStateT
 
     addSpace(char: string, coords: string, style: string): string {
         // return `<div style="${style}"><svg viewBox='0 0 20 20' style='width: 100%; height: 100%;'><text x='0.3' y='18.8' style='font: italic 3px sans-serif;'>${coords}</text><text x='2' y='16.5'>${char}</text></svg></div>`;
-        return `<div style="${style} position: relative;"><div style='position: absolute; top: 2px; left: 2px; font-size: 0.3em; font-style: italic; color: slategray;'>${coords}</div><div style='font-size: 2vw;'>${char}</div></div>`;
+        return `<div style="${style} position: relative;"><div style='position: absolute; top: 2px; left: 2px; font-size: 2vw; font-style: italic; color: slategray;'>${coords}</div>${PIECE_IMAGE[char]}</div>`;
     }
 
     buildDiscard(): string {
