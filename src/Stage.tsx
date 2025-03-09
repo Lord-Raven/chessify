@@ -19,7 +19,7 @@ const BUILD_PIECE = (index: number) => {
     const yPercent = 100 / 2;
     const xPosition = (index % 4) * xPercent;
     const yPosition = (Math.floor(index / 4) * yPercent);
-    return `<div style="width: 100%; height: 100%; background-image: url('https://i.imgur.com/L1MLIuJ.png'); background-size: 400% 300%; background-position: ${xPosition}% ${yPosition}%; filter: blur(1px);"></div>`;
+    return `<div style="width: 100%; height: 100%; background-image: url('https://i.imgur.com/L1MLIuJ.png'); background-size: 400% 300%; background-position: ${xPosition}% ${yPosition}%; filter: blur(0.5px);"></div>`;
 }
 
 const PIECE_IMAGE: {[key: string]: string} = {
@@ -336,7 +336,7 @@ export class Stage extends StageBase<InitStateType, ChatStateType, MessageStateT
 
     addSpace(char: string, coords: string, style: string): string {
         // return `<div style="${style}"><svg viewBox='0 0 20 20' style='width: 100%; height: 100%;'><text x='0.3' y='18.8' style='font: italic 3px sans-serif;'>${coords}</text><text x='2' y='16.5'>${char}</text></svg></div>`;
-        return `<div style="${style} position: relative;"><div style='position: absolute; top: 1px; left: 2px; font-size: 1em; font-style: italic;'>${coords}</div>${PIECE_IMAGE[char]}</div>`;
+        return `<div style="${style} position: relative;"><div style='position: absolute; top: -2px; left: 2px; font-size: 1em; font-style: italic;'>${coords}</div>${PIECE_IMAGE[char]}</div>`;
     }
 
     buildDiscard(): string {
