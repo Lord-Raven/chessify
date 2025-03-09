@@ -1,7 +1,7 @@
 import {ReactElement} from "react";
-import {StageBase, StageResponse, InitialData, Message, Character, User} from "@chub-ai/stages-ts";
+import {Character, InitialData, Message, StageBase, StageResponse, User} from "@chub-ai/stages-ts";
 import {LoadResponse} from "@chub-ai/stages-ts/dist/types/load";
-import {Game, move, moves, aiMove, getFen} from 'js-chess-engine';
+import {aiMove, Game, getFen, move, moves} from 'js-chess-engine';
 
 type MessageStateType = any;
 
@@ -19,10 +19,7 @@ const BUILD_PIECE = (index: number) => {
     const yPercent = 100 / 2;
     const xPosition = (index % 4) * xPercent;
     const yPosition = (Math.floor(index / 4) * yPercent);
-    console.log(`${xPercent}, ${yPercent}, ${xPosition}, ${yPosition}`);
-    const returnVal = `<div style="width: 100%; height: 100%; background-image: url('https://i.imgur.com/L1MLIuJ.png'); background-size: 400% 300%; background-position: ${xPosition}% ${yPosition}%; image-rendering: smooth;"></div>`;
-    console.log(returnVal);
-    return returnVal;
+    return `<div style="width: 100%; height: 100%; background-image: url('https://i.imgur.com/L1MLIuJ.png'); background-size: 400% 300%; background-position: ${xPosition}% ${yPosition}%; filter: blur(1px);"></div>`;
 }
 
 const PIECE_IMAGE: {[key: string]: string} = {
