@@ -350,9 +350,7 @@ export class Stage extends StageBase<InitStateType, ChatStateType, MessageStateT
             result += this.addSpace(this.takenBlacks.charAt(index), '', "width: 25%; height: 25%; display: flex; position: relative; align-items: center; justify-content: center; ");
         }
         result += `</div><div style="width: 100%; height: 50%; display: flex;">`
-        console.log(this.takenWhites);
         for (let index = 0; index < this.takenWhites.length; index++) {
-            console.log(`adding ${this.takenWhites.charAt(index)}`);
             result += this.addSpace(this.takenWhites.charAt(index), '', "width: 25%; height: 25%; display: flex; position: relative; align-items: center; justify-content: center;");
         }
         result += `</div></div>`;
