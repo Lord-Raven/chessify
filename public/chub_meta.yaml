@@ -7,10 +7,7 @@ project_name: "Chessify"
 # A short tagline to show in search.
 tagline: "It's right outside your door, now..."
 
-creator_notes: "This stage has been broken by some recent Chub changes, and I am attempting to work around it--should be possible, but I'm sorry for any inconvenience.
-<br>
-<br>
-I don't even like chess. But for all you sickos out there who do, 
+creator_notes: "I don't even like chess. But for all you sickos out there who do, 
 well, I'd rather you indulged here than out in the real world.
 <br>
 <br>
@@ -32,8 +29,7 @@ and the bot is simply informed what is happening so it can try to respond as tho
 especially if it is compelled to type a lot, but sometimes the responses are surprisingly good and demonstrate that the LLM does have some reasonable chess knowledge in there.
 <br>
 <br>
-This stage does put a gross amount of CSS into every system message, to format the chess board. Maybe if I can't sleep at night, I'll work out a way to avoid this.
-"
+03/09/2025 - Finally fixed the display issues by moving away from svg text tags. Addressed a minor bug with discarded pieces not re-calculating on load or swipe."
 
 # 'PUBLIC', 'PRIVATE', or 'UNLISTED'.
 visibility: 'PUBLIC'
