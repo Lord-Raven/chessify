@@ -342,11 +342,13 @@ export class Stage extends StageBase<InitStateType, ChatStateType, MessageStateT
     buildDiscard(): string {
         let result = `<div style="width: 25%; height: 100%; position: absolute; float: right; top: 0; right: 0;  background: darkslategray;"><div style="width: 100%; height: 50%; display: flex;">`;
         for (let index = 0; index < this.takenBlacks.length; index++) {
-            result += this.addSpace(this.takenBlacks.charAt(index), '', "width: 25%; height: 25%; display: flex; position: relative; align-items: center; justify-content: center; font-family: monospace;");
+            result += this.addSpace(this.takenBlacks.charAt(index), '', "width: 50%; height: 25%; display: flex; position: relative; align-items: center; justify-content: center; font-family: monospace;");
         }
         result += `</div><div style="width: 100%; height: 50%; display: flex;">`
+        console.log(this.takenWhites);
         for (let index = 0; index < this.takenWhites.length; index++) {
-            result += this.addSpace(this.takenWhites.charAt(index), '', "width: 25%; height: 25%; display: flex; position: relative; align-items: center; justify-content: center; font-family: monospace;");
+            console.log(`adding ${this.takenWhites.charAt(index)}`);
+            result += this.addSpace(this.takenWhites.charAt(index), '', "width: 50%; height: 25%; display: flex; position: relative; align-items: center; justify-content: center; font-family: monospace;");
         }
         result += `</div></div>`;
 
