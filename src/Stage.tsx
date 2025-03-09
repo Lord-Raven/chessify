@@ -299,7 +299,7 @@ export class Stage extends StageBase<InitStateType, ChatStateType, MessageStateT
         fen = fen.substring(0, fen.indexOf(' '));
         let result = `---\n`;
         let lines = fen.split('/');
-        result += `<div style="width: ${this.boardScale}%; padding-bottom: ${this.boardScale * 0.8}%; border: 5px solid darkslategray; border-radius: 5px; position: relative; display: table; font-family: monospace; font-style: italic;"><div style="width: 80%; height: 100%; position: absolute; top: 0; left: 0; background: darkslategray">`;
+        result += `<div style="width: ${this.boardScale}%; padding-bottom: ${this.boardScale * 0.6}%; border: 5px solid darkslategray; border-radius: 5px; position: relative; display: table; font-family: monospace; font-style: italic;"><div style="width: 60%; height: 100%; position: absolute; top: 0; left: 0; background: darkslategray">`;
         for (let index = 0; index < lines.length; index++) {
             result += this.buildRow(lines[index], index + 1);
         }
@@ -345,15 +345,15 @@ export class Stage extends StageBase<InitStateType, ChatStateType, MessageStateT
     }
 
     buildDiscard(): string {
-        let result = `<div style="width: 20%; height: 100%; position: absolute; float: right; top: 0; right: 0;  background: darkslategray;"><div style="width: 100%; height: 50%; display: flex;">`;
+        let result = `<div style="width: 40%; height: 100%; position: absolute; float: right; top: 0; right: 0;  background: darkslategray;"><div style="width: 100%; height: 50%; display: flex;">`;
         for (let index = 0; index < this.takenBlacks.length; index++) {
-            result += this.addSpace(this.takenBlacks.charAt(index), '', "width: 50%; height: 25%; display: flex; position: relative; align-items: center; justify-content: center; ");
+            result += this.addSpace(this.takenBlacks.charAt(index), '', "width: 25%; height: 25%; display: flex; position: relative; align-items: center; justify-content: center; ");
         }
         result += `</div><div style="width: 100%; height: 50%; display: flex;">`
         console.log(this.takenWhites);
         for (let index = 0; index < this.takenWhites.length; index++) {
             console.log(`adding ${this.takenWhites.charAt(index)}`);
-            result += this.addSpace(this.takenWhites.charAt(index), '', "width: 50%; height: 25%; display: flex; position: relative; align-items: center; justify-content: center;");
+            result += this.addSpace(this.takenWhites.charAt(index), '', "width: 25%; height: 25%; display: flex; position: relative; align-items: center; justify-content: center;");
         }
         result += `</div></div>`;
 
