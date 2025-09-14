@@ -246,6 +246,14 @@ export class Stage extends StageBase<InitStateType, ChatStateType, MessageStateT
 
     async afterResponse(botMessage: Message): Promise<Partial<StageResponse<ChatStateType, MessageStateType>>> {
 
+        let message = botMessage.content;
+        // Need to strip "---" or "System:" to the end of the message, if these are present.
+        if (message.indexOf('---') > -1) {
+            message = message.substring(0, message.indexOf('---')).trim();
+        }
+        if (message.toLowerCase().indexOf('system:') > -1) {
+            message = message.substring(0, message.toLowerCase().indexOf('system:')).trim();
+        }
         let boardRendering: string|null = null;
         if (this.gameState) {
             boardRendering = this.buildBoard();
@@ -263,7 +271,7 @@ export class Stage extends StageBase<InitStateType, ChatStateType, MessageStateT
         return {
             stageDirections: null,
             messageState: this.writeMessageState(),
-            modifiedMessage: null,
+            modifiedMessage: message,
             error: null,
             systemMessage: boardRendering,
             chatState: null
@@ -279,9 +287,9 @@ export class Stage extends StageBase<InitStateType, ChatStateType, MessageStateT
     }
 
     calculateTaken() {
-        this.takenBlacks = 'kqrrbbnnpppppppp';
-        this.takenWhites = 'KQRRBBNNPPPPPPPP';
-        const pieces: string[] = Object.values(this.gameState.pieces);
+        this.takenBlacks = this.gameState ? 'kqrrbbnnpppppppp' : '';
+        this.takenWhites = this.gameState ? 'KQRRBBNNPPPPPPPP' : '';
+        const pieces: string[] = this.gameState ? Object.values(this.gameState.pieces) : [];
         pieces.forEach(piece => {
             const blackIndex = this.takenBlacks.indexOf(piece);
             if (blackIndex > -1) {

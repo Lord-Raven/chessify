@@ -29,7 +29,8 @@ and the bot is simply informed what is happening so it can try to respond as tho
 especially if it is compelled to type a lot, but sometimes the responses are surprisingly good and demonstrate that the LLM does have some reasonable chess knowledge in there.
 <br>
 <br>
-03/09/2025 - Finally fixed the display issues by moving away from svg text tags. Addressed a minor bug with discarded pieces not re-calculating on load or swipe."
+2025.09.13 - Fixed a couple bugs, added some basic stuff to combat \"fake\" board rendering by the LLM, and updated dependencies.<br>
+2025.03.09 - Finally fixed the display issues by moving away from svg text tags. Addressed a minor bug with discarded pieces not re-calculating on load or swipe."
 
 # 'PUBLIC', 'PRIVATE', or 'UNLISTED'.
 visibility: 'PUBLIC'
@@ -49,6 +50,7 @@ tags:
  - 'Stage'
  - 'Add-on'
  - 'Chess'
+ - 'Game'
 
 # The schema of any user-supplied config.
 # If your stage requires a configuration but has no
